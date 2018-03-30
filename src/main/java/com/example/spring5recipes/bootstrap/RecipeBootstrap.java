@@ -4,9 +4,11 @@ import com.example.spring5recipes.domain.*;
 import com.example.spring5recipes.repositories.CategoryRepository;
 import com.example.spring5recipes.repositories.RecipeRepository;
 import com.example.spring5recipes.repositories.UnitOfMeasureRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -14,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
+@Slf4j
 public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEvent> {
 
     private final RecipeRepository recipeRepository;
@@ -72,7 +75,7 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
 
         guacNotes.setRecipe(guacRecipe);
         guacRecipe.setNotes(guacNotes);
-        guacRecipe.getIngredients().add(new Ingredient(guacRecipe, "ripe avokados", new BigDecimal(2), eachUom));
+        guacRecipe.getIngredients().add(new Ingredient( "ripe avokados", new BigDecimal(2), eachUom));
         guacRecipe.getCategories().add(americanCategory);
         guacRecipe.getCategories().add(mexicanCategory);
 
@@ -118,7 +121,9 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
 
 
     @Override
+    @Transactional
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
         recipeRepository.saveAll(getRecipes());
+        log.debug("Loading Bootstrap recipes");
     }
 }
