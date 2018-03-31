@@ -26,10 +26,20 @@
                     <li>Preparation time: <span th:text="${recipe.prepTime}"></span> </li>
                     <li>Cooking time: <span th:text="${recipe.cookTime}"></span></li>
                     <li>Difficulty: <span th:text="${recipe.difficulty}"></span> </li>
-                    <li>Ingredients:
-                        <ol th:each="ingredient : ${recipe.ingredients}">
-                            <li th:text="${ingredient.description}"></li>
-                        </ol>
+                </ul>
+            </div>
+
+        </div>
+
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h1 class="panel-title">Ingredients</h1>
+            </div>
+            <div class="panel-body">
+                <ul >
+                    <li th:each="ingredient : ${recipe.ingredients}"
+                    th:text="${ingredient.getDescription()}">
                     </li>
                 </ul>
             </div>
