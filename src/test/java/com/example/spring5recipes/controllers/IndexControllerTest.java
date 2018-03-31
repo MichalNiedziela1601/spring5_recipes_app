@@ -1,6 +1,7 @@
 package com.example.spring5recipes.controllers;
 
 import com.example.spring5recipes.domain.Recipe;
+import com.example.spring5recipes.repositories.UnitOfMeasureRepository;
 import com.example.spring5recipes.services.RecipeService;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,6 +31,9 @@ public class IndexControllerTest {
 
     @Mock
     Model model;
+
+    @Mock
+    UnitOfMeasureRepository unitOfMeasureRepository;
 
     @Before
     public void setUp() throws Exception {
@@ -73,7 +77,4 @@ public class IndexControllerTest {
         Set<Recipe> setInController = argumentCaptor.getValue();
         assertEquals(2, setInController.size());
     }
-
-
-
 }
