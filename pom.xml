@@ -42,11 +42,10 @@
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 		</dependency>
-
 		<dependency>
-			<groupId>com.vaadin</groupId>
-			<artifactId>vaadin-archetype-application</artifactId>
-			<version>8.3.3</version>
+			<groupId>org.webjars</groupId>
+			<artifactId>bootstrap</artifactId>
+			<version>3.3.7</version>
 		</dependency>
 
 		<dependency>
