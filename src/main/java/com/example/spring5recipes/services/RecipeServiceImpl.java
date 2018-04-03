@@ -1,6 +1,7 @@
 package com.example.spring5recipes.services;
 
 
+import com.example.spring5recipes.commands.RecipeCommand;
 import com.example.spring5recipes.domain.Recipe;
 import com.example.spring5recipes.repositories.RecipeRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -34,5 +35,10 @@ public class RecipeServiceImpl implements RecipeService {
             throw new RuntimeException("Recipe with id " + id + " not found");
         }
         return recipeOptional.get();
+    }
+
+    @Override
+    public RecipeCommand saveRecipeCommand(RecipeCommand command) {
+        return null;
     }
 }
