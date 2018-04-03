@@ -38,8 +38,8 @@ public class RecipeServiceIT {
     public void testSaveRecipeCommand() throws Exception {
         //given
         Iterable<Recipe> recipes = recipeRepository.findAll();
-        Recipe testRecipe = new Recipe();
-        RecipeCommand testRecipeCommand = new RecipeCommand();
+        Recipe testRecipe = recipes.iterator().next();
+        RecipeCommand testRecipeCommand = recipeToRecipeCommand.convert(testRecipe);
 
         //when
         testRecipeCommand.setDescription(NEW_DESCRIPTION);
