@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Recipe Form</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"
+          th:src="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}">
+
+    <script src="webjars/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous" th:src="@{/webjars/bootstap/3.3.7/js/bootstrap.min.js}"></script>
+</head>
+
+<body>
+
+<div class="container">
+    <div class="row">
+        <form class="form" th:object="${recipe}" th:action="@{/recipe/}">
+            <div class="panel panel-primary">
+                <div class="panel-heading"><h1 class="panel-title">New Recipe</h1></div>
+            </div>
+            <div class="panel-body">
+                <input type="hidden" th:field="*{id}">
+                <div class="row">
+                    <div class="col-md-7">
+                        <div class="form-group">
+                            <label for="description">Description</label>
+                            <input type="text" id="description" class="form-control" th:field="*{description}">
+                        </div>
+
+
+                    </div>
+                </div>
+                <div class="row"></div>
+                <div class="radio">
+                    <label>
+                        <input type="checkbox" value=""/>
+                        Cat 1
+                    </label>
+                </div>
+                <div class="radio" th:remove="all">
+                    <label>
+                        <input type="checkbox" value=""/>
+                        Cat 2
+                    </label>
+                </div>
+                    <div class="checkbox">
+                        <th:block th:each="category : ${categories}">
+                            <label>
+                                <input type="checkbox" name="category"  th:text="${category.getDescription()}" th:value="${category.getDescription()}">
+                            </label>
+                        </th:block>
+
+
+
+                    </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="prepTime">Preparation Time</label>
+                            <input type="text" id="prepTime" class="form-control" th:field="*{prepTime}">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cookTime">Cooking Time</label>
+                            <input type="text" id="cookTime" class="form-control" th:field="*{cookTime}">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="difficulty">Difficulty</label>
+                            <select class="form-control" id="difficulty">
+                                <option>Easy</option>
+                                <option>Medium</option>
+                                <option>Hard</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="servings">Servings</label>
+                            <input type="text" class="form-control" id="servings" th:field="*{servings}">
+                        </div>
+                        <div class="form-group">
+                            <label for="source">Source</label>
+                            <input type="text" class="form-control" id="source" th:field="*{source}">
+                        </div>
+                        <div class="form-group">
+                            <label for="url">URL</label>
+                            <input type="text" class="form-control" id="url" th:field="*{url}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h2 class="panel-title">Ingredients</h2>
+                </div>
+
+                <div class="panel-body">
+                    <ul>
+                        <li th:each="ingredient : ${recipe.ingredients}"
+                            th:text="|${ingredient.getAmount()} ${ingredient.uom.getDescription()} ${ingredient.getDescription()}|"></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h2 class="panel-title">Directions</h2>
+                </div>
+
+                <div class="panel-body">
+                    <textarea class="form-control" th:field="*{directions}"></textarea>
+                </div>
+            </div>
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h2 class="panel-title">Notes</h2>
+                </div>
+
+                <div class="panel-body">
+                    <textarea class="form-control" th:field="*{notes.recipeNotes}"></textarea>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+
+
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
