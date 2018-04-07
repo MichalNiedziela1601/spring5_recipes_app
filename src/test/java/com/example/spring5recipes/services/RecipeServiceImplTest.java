@@ -1,5 +1,6 @@
 package com.example.spring5recipes.services;
 
+import com.example.spring5recipes.commands.RecipeCommand;
 import com.example.spring5recipes.converters.RecipeCommandToRecipe;
 import com.example.spring5recipes.converters.RecipeToRecipeCommand;
 import com.example.spring5recipes.domain.Recipe;
@@ -62,6 +63,27 @@ public class RecipeServiceImplTest {
         Recipe recipeReturned = recipeService.findById(1L);
 
         assertNotNull("Null recipe returned", recipeReturned);
+        verify(recipeRepository, times(1)).findById(anyLong());
+        verify(recipeRepository, never()).findAll();
+    }
+
+    @Test
+    public void findCommandByIdTest() throws Exception {
+        Recipe recipe = new Recipe();
+        recipe.setId(2L);
+
+        Optional<Recipe> recipeOptional = Optional.of(recipe);
+
+        when(recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
+
+        RecipeCommand recipeCommand = new RecipeCommand();
+        recipeCommand.setId(2L);
+
+        when(recipeToRecipeCommand.convert(any())).thenReturn(recipeCommand);
+
+        RecipeCommand recipeCommandById = recipeService.findCommandById(2L);
+
+        assertNotNull(recipeCommandById);
         verify(recipeRepository, times(1)).findById(anyLong());
         verify(recipeRepository, never()).findAll();
     }

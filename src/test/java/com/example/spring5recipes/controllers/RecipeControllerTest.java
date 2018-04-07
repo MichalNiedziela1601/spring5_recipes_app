@@ -72,7 +72,7 @@ public class RecipeControllerTest {
     }
 
     @Test
-    public void testNewRecipeForm() throws Exception {
+    public void testGetNewRecipeView() throws Exception {
         mvc.perform(get("/recipe/new"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("recipe/form"))
@@ -93,6 +93,16 @@ public class RecipeControllerTest {
         )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/recipe/show/2"));
+    }
+
+    @Test
+    public void testGetUpdateView() throws Exception {
+        RecipeCommand recipeCommand = new RecipeCommand();
+        recipeCommand.setId(2L);
+
+        mvc.perform(get("/recipe/update/2"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("recipe/form"));
     }
 
 }
