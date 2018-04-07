@@ -102,7 +102,7 @@ public class RecipeControllerTest {
 
         mvc.perform(get("/recipe/update/2"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("recipe/update"));
+                .andExpect(view().name("recipe/form"));
     }
 
 }
