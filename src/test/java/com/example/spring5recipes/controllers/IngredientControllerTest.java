@@ -1,6 +1,8 @@
 package com.example.spring5recipes.controllers;
 
+import com.example.spring5recipes.commands.IngredientCommand;
 import com.example.spring5recipes.commands.RecipeCommand;
+import com.example.spring5recipes.services.IngredientService;
 import com.example.spring5recipes.services.RecipeService;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,11 +23,14 @@ public class IngredientControllerTest {
     @Mock
     RecipeService recipeService;
 
+    @Mock
+    IngredientService ingredientService;
+
     MockMvc mockMvc;
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        controller = new IngredientController(recipeService);
+        controller = new IngredientController(recipeService, ingredientService);
 
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
     }
@@ -42,4 +47,16 @@ public class IngredientControllerTest {
                 .andExpect(model().attributeExists("recipe"));
     }
 
+    @Test
+    public void testShowIngredient() throws Exception {
+        IngredientCommand ingredientCommand = new IngredientCommand();
+        ingredientCommand.setId(2L);
+
+        when(ingredientService.findByRecipeIdAndIngredientId(anyLong(), anyLong())).thenReturn(ingredientCommand);
+
+        mockMvc.perform(get("/recipe/1/ingredients/2/show"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("recipe/ingredients/show"))
+                .andExpect(model().attributeExists("ingredient"));
+    }
 }
