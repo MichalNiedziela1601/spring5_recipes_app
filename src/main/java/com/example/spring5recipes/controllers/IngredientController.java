@@ -31,8 +31,10 @@ public class IngredientController {
 
     @GetMapping
     @RequestMapping("recipe/{recipeId}/ingredients/{id}/show")
-    public String showRecipeIngredient(@PathVariable String recipeId, String id, Model model) {
+    public String showRecipeIngredient(@PathVariable String recipeId, @PathVariable String id, Model model) {
 
-        return null;
+        model.addAttribute("ingredient", ingredientService.findByRecipeIdAndIngredientId(Long.valueOf(recipeId), Long.valueOf(id)));
+
+        return "recipe/ingredients/show";
     }
 }

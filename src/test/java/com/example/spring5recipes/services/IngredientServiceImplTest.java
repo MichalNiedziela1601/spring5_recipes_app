@@ -29,6 +29,7 @@ public class IngredientServiceImplTest {
     @Mock
     RecipeRepository recipeRepository;
 
+
     public IngredientServiceImplTest() {
         this.ingredientCommandToIngredient = new IngredientCommandToIngredient(new UnitOfMeasureCommandToUnitOfMeasure());
         this.ingredientToIngredientCommand = new IngredientToIngredientCommand(new UnitOfMeasureToUnitOfMeasureCommand());
@@ -37,7 +38,7 @@ public class IngredientServiceImplTest {
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        ingredientService = new IngredientServiceImpl();
+        ingredientService = new IngredientServiceImpl(ingredientCommandToIngredient,ingredientToIngredientCommand, recipeRepository);
     }
 
     @Test
