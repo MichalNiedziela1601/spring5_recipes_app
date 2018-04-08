@@ -20,11 +20,13 @@
                 <h1 class="panel-title" th:text="${recipe.description}">Description</h1>
             </div>
             <div class="panel-body">
+                <p>Preparation time: <span th:text="${recipe.prepTime}"></span></p>
+                <p>Cooking time: <span th:text="${recipe.cookTime}"></span></p>
+                <p>Difficulty: <span th:text="${recipe.difficulty}"></span></p>
+                <p>Servings: <span th:text="${recipe.servings}"></span></p>
+                <p>Categories:</p>
                 <ul>
-                    <li>Preparation time: <span th:text="${recipe.prepTime}"></span> </li>
-                    <li>Cooking time: <span th:text="${recipe.cookTime}"></span></li>
-                    <li>Difficulty: <span th:text="${recipe.difficulty}"></span> </li>
-                    <li>Servings: <span th:text="${recipe.servings}"></span> </li>
+                    <li th:each="category : ${recipe.categories}" th:text="${category.getDescription()}"></li>
                 </ul>
             </div>
 
@@ -36,9 +38,9 @@
                 <h1 class="panel-title">Ingredients</h1>
             </div>
             <div class="panel-body">
-                <ul >
+                <ul>
                     <li th:each="ingredient : ${recipe.ingredients}"
-                    th:text="|${ingredient.getAmount()} ${ingredient.uom.getDescription()} ${ingredient.getDescription()}|">
+                        th:text="|${ingredient.getAmount()} ${ingredient.uom.getDescription()} ${ingredient.getDescription()}|">
                     </li>
                 </ul>
             </div>
