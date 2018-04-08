@@ -19,8 +19,7 @@ import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class RecipeControllerTest {
@@ -103,6 +102,18 @@ public class RecipeControllerTest {
         mvc.perform(get("/recipe/update/2"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("recipe/form"));
+    }
+
+    @Test
+    public void givenRecipeIdWhenDeleteMethodThenDeleteRecipe() throws Exception {
+
+        mvc.perform(delete("/recipe/delete/1"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/"));
+
+        verify(recipeService, times(1)).deleteById(anyLong());
+
+
     }
 
 }
