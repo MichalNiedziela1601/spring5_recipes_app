@@ -22,10 +22,20 @@
             </div>
 
             <div class="panel-body">
-                <ul>
-                    <li th:each="ingredient : ${recipe.getIngredients()}"
-                        th:text="|${ingredient.getAmount()} ${ingredient.getUom().getDescription()} - ${ingredient.getDescription()}|"></li>
-                </ul>
+                <table class="table">
+                    <tr>
+                        <th>Description</th>
+                        <th>Show</th>
+                        <th>Update</th>
+                        <th>Delete</th>
+                    </tr>
+                    <tr th:each="ingredient : ${recipe.getIngredients()}">
+                            <td th:text="|${ingredient.getAmount()} ${ingredient.getUom().getDescription()} - ${ingredient.getDescription()}|"></td>
+                        <td><a th:href="@{'/recipe/' + ${recipe.getId()} + '/ingredients/'+${ingredient.getId()} + '/show'}">Show</a> </td>
+                        <td><a th:href="@{'/recipe/' + ${recipe.getId()} + '/ingredients/'+${ingredient.getId()} + '/update'}">Update</a> </td>
+                        <td><a th:href="@{'/recipe/' + ${recipe.getId()} + '/ingredients/'+${ingredient.getId()} + '/delete'}">Delete</a> </td>
+                    </tr>
+                </table>
             </div>
         </div>
     </div>
