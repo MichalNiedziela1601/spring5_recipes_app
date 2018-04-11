@@ -17,8 +17,11 @@
 <div class="container">
     <div class="row">
         <div class="panel panel-primary">
-            <div class="panel-heading">
+            <div class="panel-heading clearfix">
                 <h1 class="panel-title">Ingredients</h1>
+                <a href="#" th:href="@{'/recipe/'+ ${recipe.id} + '/ingredients/new'}">
+                    <button class="btn btn-default pull-right">New</button>
+                </a>
             </div>
 
             <div class="panel-body">

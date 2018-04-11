@@ -4,6 +4,7 @@ import com.example.spring5recipes.commands.IngredientCommand;
 import com.example.spring5recipes.commands.RecipeCommand;
 import com.example.spring5recipes.services.IngredientService;
 import com.example.spring5recipes.services.RecipeService;
+import com.example.spring5recipes.services.UnitOfMeasureService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -29,11 +30,14 @@ public class IngredientControllerTest {
     @Mock
     IngredientService ingredientService;
 
+    @Mock
+    UnitOfMeasureService unitOfMeasureService;
+
     MockMvc mockMvc;
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        controller = new IngredientController(recipeService, ingredientService);
+        controller = new IngredientController(recipeService, ingredientService, unitOfMeasureService);
 
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
     }
@@ -82,9 +86,9 @@ public class IngredientControllerTest {
         ingredientCommand.setId(4L);
         ingredientCommand.setRecipeId(2L);
 
-        when(ingredientService.saveIngredientCommand(any(IngredientCommand.class))).thenReturn(ingredientCommand);
+        when(ingredientService.saveIngredientCommand(any())).thenReturn(ingredientCommand);
 
-        mockMvc.perform(post("recipe/ingredients")
+        mockMvc.perform(post("/recipe/2/ingredient")
         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
         .param("id","")
         .param("description", "ingredient"))

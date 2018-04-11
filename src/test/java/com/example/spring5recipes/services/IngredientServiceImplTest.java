@@ -8,6 +8,7 @@ import com.example.spring5recipes.converters.UnitOfMeasureToUnitOfMeasureCommand
 import com.example.spring5recipes.domain.Ingredient;
 import com.example.spring5recipes.domain.Recipe;
 import com.example.spring5recipes.repositories.RecipeRepository;
+import com.example.spring5recipes.repositories.UnitOfMeasureRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -29,6 +30,9 @@ public class IngredientServiceImplTest {
     @Mock
     RecipeRepository recipeRepository;
 
+    @Mock
+    UnitOfMeasureRepository unitOfMeasureRepository;
+
 
     public IngredientServiceImplTest() {
         this.ingredientCommandToIngredient = new IngredientCommandToIngredient(new UnitOfMeasureCommandToUnitOfMeasure());
@@ -38,7 +42,8 @@ public class IngredientServiceImplTest {
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        ingredientService = new IngredientServiceImpl(ingredientCommandToIngredient,ingredientToIngredientCommand, recipeRepository);
+        ingredientService = new IngredientServiceImpl(
+                ingredientCommandToIngredient,ingredientToIngredientCommand, recipeRepository, unitOfMeasureRepository);
     }
 
     @Test
