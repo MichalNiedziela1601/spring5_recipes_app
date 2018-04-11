@@ -8,6 +8,7 @@ import com.example.spring5recipes.converters.UnitOfMeasureToUnitOfMeasureCommand
 import com.example.spring5recipes.domain.Ingredient;
 import com.example.spring5recipes.domain.Recipe;
 import com.example.spring5recipes.repositories.RecipeRepository;
+import com.example.spring5recipes.repositories.UnitOfMeasureRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -29,6 +30,9 @@ public class IngredientServiceImplTest {
     @Mock
     RecipeRepository recipeRepository;
 
+    @Mock
+    UnitOfMeasureRepository unitOfMeasureRepository;
+
 
     public IngredientServiceImplTest() {
         this.ingredientCommandToIngredient = new IngredientCommandToIngredient(new UnitOfMeasureCommandToUnitOfMeasure());
@@ -38,7 +42,8 @@ public class IngredientServiceImplTest {
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        ingredientService = new IngredientServiceImpl(ingredientCommandToIngredient,ingredientToIngredientCommand, recipeRepository);
+        ingredientService = new IngredientServiceImpl(
+                ingredientCommandToIngredient,ingredientToIngredientCommand, recipeRepository, unitOfMeasureRepository);
     }
 
     @Test
@@ -68,4 +73,27 @@ public class IngredientServiceImplTest {
 
     }
 
+    @Test
+    public void testSaveIngredient() throws Exception {
+        IngredientCommand command = new IngredientCommand();
+        command.setRecipeId(2L);
+        command.setId(4L);
+
+        Optional<Recipe> recipeOptional = Optional.of(new Recipe());
+
+        Recipe savedRecipe = new Recipe();
+        savedRecipe.setId(2L);
+        savedRecipe.addIngredients(new Ingredient());
+        savedRecipe.getIngredients().iterator().next().setId(4L);
+
+
+        when(recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
+        when(recipeRepository.save(any())).thenReturn(savedRecipe);
+
+        IngredientCommand savedIngrement = ingredientService.saveIngredientCommand(command);
+
+        assertEquals(Long.valueOf(4L), savedIngrement.getId());
+        verify(recipeRepository, times(1)).findById(anyLong());
+        verify(recipeRepository, times(1)).save(any(Recipe.class));
+    }
 }
