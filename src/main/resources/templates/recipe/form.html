@@ -17,7 +17,7 @@
 
 <div class="container">
     <div class="row">
-        <form class="form" th:object="${recipe}" th:action="@{/recipe/}">
+        <form class="form" th:object="${recipe}" th:action="@{/recipe/}" method="post">
             <div class="panel panel-primary">
                 <div class="panel-heading"><h1 class="panel-title">New Recipe</h1></div>
             </div>
@@ -33,29 +33,16 @@
 
                     </div>
                 </div>
-                <div class="row"></div>
-                <div class="radio">
-                    <label>
-                        <input type="checkbox" value=""/>
-                        Cat 1
-                    </label>
-                </div>
-                <div class="radio" th:remove="all">
-                    <label>
-                        <input type="checkbox" value=""/>
-                        Cat 2
-                    </label>
-                </div>
+                <div class="row">
                     <div class="checkbox">
                         <th:block th:each="category : ${categories}">
                             <label>
-                                <input type="checkbox" name="category"  th:text="${category.getDescription()}" th:value="${category.getDescription()}">
+                                <input type="checkbox" th:text="${category.getDescription()}" th:value="${category.getDescription()}">
                             </label>
                         </th:block>
-
-
-
                     </div>
+                </div>
+
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
@@ -70,10 +57,10 @@
 
                         <div class="form-group">
                             <label for="difficulty">Difficulty</label>
-                            <select class="form-control" id="difficulty">
-                                <option>Easy</option>
-                                <option>Medium</option>
-                                <option>Hard</option>
+                            <select class="form-control" id="difficulty" th:field="*{difficulty}">
+                                <option th:each="difficultyValue : ${T(com.example.spring5recipes.domain.Difficulty).values()}"
+                                th:value="${difficultyValue.name()}"
+                                th:text="${difficultyValue.name()}"></option>
                             </select>
                         </div>
                     </div>

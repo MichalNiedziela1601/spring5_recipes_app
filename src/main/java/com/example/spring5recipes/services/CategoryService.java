@@ -1,10 +1,10 @@
 package com.example.spring5recipes.services;
 
-import com.example.spring5recipes.domain.Category;
+import com.example.spring5recipes.commands.CategoryCommand;
 
 import java.util.Set;
 
 public interface CategoryService {
 
-    Set<Category> getCategories();
+    Set<CategoryCommand> getCategories();
 }
