@@ -19,6 +19,7 @@
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <h1 class="panel-title" th:text="${recipe.description}">Description</h1>
+                <a href="#" th:href="@{'/recipe/' + ${recipe.getId()} + '/image'}"><button class="btn btn-default">Add image</button></a>
             </div>
             <div class="panel-body">
                 <p>Preparation time: <span th:text="${recipe.prepTime}"></span></p>
