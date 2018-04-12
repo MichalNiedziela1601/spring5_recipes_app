@@ -22,14 +22,18 @@
                 <a href="#" th:href="@{'/recipe/' + ${recipe.getId()} + '/image'}"><button class="btn btn-default">Add image</button></a>
             </div>
             <div class="panel-body">
-                <p>Preparation time: <span th:text="${recipe.prepTime}"></span></p>
+               <div class="col-md-6"> <p>Preparation time: <span th:text="${recipe.prepTime}"></span></p>
                 <p>Cooking time: <span th:text="${recipe.cookTime}"></span></p>
                 <p>Difficulty: <span th:text="${recipe.difficulty}"></span></p>
                 <p>Servings: <span th:text="${recipe.servings}"></span></p>
                 <p>Categories:</p>
                 <ul>
                     <li th:each="category : ${recipe.categories}" th:text="${category.getDescription()}"></li>
-                </ul>
+                </ul></div>
+
+                <div class="col-md-6">
+                    <img th:src="@{'/recipe/' + ${recipe.getId()} + '/recipeimage'}" width="200" height="200">
+                </div>
             </div>
 
         </div>
