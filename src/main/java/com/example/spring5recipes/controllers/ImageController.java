@@ -23,12 +23,14 @@ public class ImageController {
 
     @GetMapping("recipe/{id}/image")
     public String showUploadForm(@PathVariable String id, Model model) {
-
-        return "";
+        model.addAttribute("recipe", recipeService.findCommandById(Long.valueOf(id)));
+        return "recipe/uploadimageform";
     }
 
     @PostMapping("recipe/{id}/image")
     public String handleUploadImage(@PathVariable String id, @RequestParam("imagefile")MultipartFile file) {
-        return "";
+        imageService.saveImageFile(Long.valueOf(id), file);
+
+        return "redirect:/recipe/"+ id +"/show";
     }
 }
