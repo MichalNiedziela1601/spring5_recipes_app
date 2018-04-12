@@ -83,7 +83,7 @@ public class ImageControllerTest {
 
         when(recipeService.findCommandById(anyLong())).thenReturn(recipeCommand);
 
-        MockHttpServletResponse response = mockMvc.perform(get("/recipe/1/image"))
+        MockHttpServletResponse response = mockMvc.perform(get("/recipe/1/recipeimage"))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
 
