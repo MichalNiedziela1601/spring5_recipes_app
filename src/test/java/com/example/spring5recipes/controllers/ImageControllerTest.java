@@ -3,10 +3,12 @@ package com.example.spring5recipes.controllers;
 import com.example.spring5recipes.commands.RecipeCommand;
 import com.example.spring5recipes.services.ImageService;
 import com.example.spring5recipes.services.RecipeService;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -62,5 +64,32 @@ public class ImageControllerTest {
                 .andExpect(header().string("Location","/recipe/show/1"));
 
         verify(imageService,times(1)).saveImageFile(anyLong(), any());
+    }
+
+    @Test
+    public void testRenderImage() throws Exception {
+        RecipeCommand recipeCommand = new RecipeCommand();
+        recipeCommand.setId(1L);
+
+        String s = "test image";
+        Byte[] imageBytes = new Byte[s.getBytes().length];
+
+        int i = 0;
+
+        for(Byte b : s.getBytes()) {
+            imageBytes[i++] = b;
+        }
+        recipeCommand.setImage(imageBytes);
+
+        when(recipeService.findCommandById(anyLong())).thenReturn(recipeCommand);
+
+        MockHttpServletResponse response = mockMvc.perform(get("/recipe/1/image"))
+                .andExpect(status().isOk())
+                .andReturn().getResponse();
+
+        byte[] responseImage = response.getContentAsByteArray();
+
+        Assert.assertEquals(s.getBytes().length,responseImage.length);
+
     }
 }
