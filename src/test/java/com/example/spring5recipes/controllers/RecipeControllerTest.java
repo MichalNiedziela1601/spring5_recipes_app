@@ -2,6 +2,7 @@ package com.example.spring5recipes.controllers;
 
 import com.example.spring5recipes.commands.RecipeCommand;
 import com.example.spring5recipes.domain.Recipe;
+import com.example.spring5recipes.exceptions.NotFoundException;
 import com.example.spring5recipes.services.CategoryService;
 import com.example.spring5recipes.services.RecipeService;
 import org.junit.Before;
@@ -64,10 +65,22 @@ public class RecipeControllerTest {
     }
 
     @Test
+    public void testBadRecipeIdGIveStatusNOtFound() throws Exception {
+        Recipe recipe = new Recipe();
+        recipe.setId(1L);
+
+        when(recipeService.findById(anyLong())).thenThrow(NotFoundException.class);
+
+        mvc.perform(get("/recipe/show/1"))
+                .andExpect(status().isNotFound())
+                .andExpect(view().name("404error"));
+    }
+
+    @Test
     public void givenIdRecipeWhenUrlRecipeShowThenReturnRecipe() throws Exception {
         mvc.perform(get("/recipe/show/1"))
                 .andExpect(status().isOk())
-        .andExpect(view().name("recipe/show"));
+                .andExpect(view().name("recipe/show"));
     }
 
     @Test
@@ -87,8 +100,8 @@ public class RecipeControllerTest {
         when(recipeService.saveRecipeCommand(any())).thenReturn(testRecipeCommand);
 
         mvc.perform(post("/recipe").contentType(MediaType.APPLICATION_FORM_URLENCODED)
-        .param("id", "")
-        .param("description","description")
+                .param("id", "")
+                .param("description", "description")
         )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/recipe/show/2"));

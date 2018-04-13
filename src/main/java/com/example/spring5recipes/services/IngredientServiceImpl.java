@@ -5,6 +5,7 @@ import com.example.spring5recipes.converters.IngredientCommandToIngredient;
 import com.example.spring5recipes.converters.IngredientToIngredientCommand;
 import com.example.spring5recipes.domain.Ingredient;
 import com.example.spring5recipes.domain.Recipe;
+import com.example.spring5recipes.exceptions.NotFoundException;
 import com.example.spring5recipes.repositories.RecipeRepository;
 import com.example.spring5recipes.repositories.UnitOfMeasureRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +41,7 @@ public class IngredientServiceImpl implements IngredientService {
 
         if(!recipeOptional.isPresent()) {
             log.error("Recipe not found: " + recipeId);
-            return null;
+            throw new NotFoundException("Recipe not found");
         }
 
         Recipe recipe = recipeOptional.get();
@@ -53,7 +54,7 @@ public class IngredientServiceImpl implements IngredientService {
 
         if(!ingredientCommandOptional.isPresent()) {
             log.error("Ingredient not found: " + ingredientId);
-            return null;
+            throw new NotFoundException("Ingredient not found");
         }
 
         return ingredientCommandOptional.get();

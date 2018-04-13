@@ -7,6 +7,7 @@ import com.example.spring5recipes.converters.UnitOfMeasureCommandToUnitOfMeasure
 import com.example.spring5recipes.converters.UnitOfMeasureToUnitOfMeasureCommand;
 import com.example.spring5recipes.domain.Ingredient;
 import com.example.spring5recipes.domain.Recipe;
+import com.example.spring5recipes.exceptions.NotFoundException;
 import com.example.spring5recipes.repositories.RecipeRepository;
 import com.example.spring5recipes.repositories.UnitOfMeasureRepository;
 import org.junit.Before;
@@ -71,6 +72,19 @@ public class IngredientServiceImplTest {
         assertEquals(Long.valueOf(1L), ingredientCommand.getRecipeId());
         verify(recipeRepository, times(1)).findById(anyLong());
 
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void testFindByRecipeIdAndIngredientIdNotFoundException() throws Exception {
+
+        Recipe recipe = new Recipe();
+        recipe.setId(1L);
+
+        Optional<Recipe> recipeOptional = Optional.of(recipe);
+
+        when(recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
+
+        IngredientCommand ingredientCommand = ingredientService.findByRecipeIdAndIngredientId(1L,2L);
     }
 
     @Test
