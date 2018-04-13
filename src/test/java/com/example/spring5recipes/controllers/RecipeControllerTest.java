@@ -2,6 +2,7 @@ package com.example.spring5recipes.controllers;
 
 import com.example.spring5recipes.commands.RecipeCommand;
 import com.example.spring5recipes.domain.Recipe;
+import com.example.spring5recipes.exceptions.NotFoundException;
 import com.example.spring5recipes.services.CategoryService;
 import com.example.spring5recipes.services.RecipeService;
 import org.junit.Before;
@@ -61,6 +62,17 @@ public class RecipeControllerTest {
 
         assertEquals("recipe/show", result);
         verify(model, times(1)).addAttribute(eq("recipe"), argumentCaptor.capture());
+    }
+
+    @Test
+    public void testBadRecipeIdGIveStatusNOtFound() throws Exception {
+        Recipe recipe = new Recipe();
+        recipe.setId(1L);
+
+        when(recipeService.findById(anyLong())).thenThrow(NotFoundException.class);
+
+        mvc.perform(get("/recipe/show/1"))
+                .andExpect(status().isNotFound());
     }
 
     @Test
