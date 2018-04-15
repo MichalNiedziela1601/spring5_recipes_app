@@ -119,6 +119,21 @@ public class IngredientControllerTest {
     }
 
     @Test
+    public void testSaveIngredientValidationFail() throws Exception {
+        IngredientCommand ingredientCommand = new IngredientCommand();
+        ingredientCommand.setId(4L);
+        ingredientCommand.setRecipeId(2L);
+
+        when(ingredientService.saveIngredientCommand(any())).thenReturn(ingredientCommand);
+
+        mockMvc.perform(post("/recipe/2/ingredient")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("id",""))
+                .andExpect(status().isOk())
+                .andExpect(view().name("recipe/ingredients/form"));
+    }
+
+    @Test
     public void testDeleteIngredient() throws Exception {
 
         mockMvc.perform(get("/recipe/1/ingredients/2/delete"))

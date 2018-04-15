@@ -11,8 +11,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.validation.Valid;
 
 @Slf4j
 @Controller
@@ -56,7 +59,14 @@ public class IngredientController {
 
     @PostMapping
     @RequestMapping("recipe/{recipeId}/ingredient")
-    public String saveOrUpdateIngredients(@ModelAttribute IngredientCommand command) {
+    public String saveOrUpdateIngredients(@Valid @ModelAttribute("ingredient") IngredientCommand command, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            bindingResult.getAllErrors().forEach(objectError -> {
+                log.debug(objectError.toString());
+            });
+
+            return "recipe/ingredients/form";
+        }
         IngredientCommand savedIngredient = ingredientService.saveIngredientCommand(command);
 
         return "redirect:/recipe/" + savedIngredient.getRecipeId() + "/ingredients/" + savedIngredient.getId() + "/show";
