@@ -2,6 +2,7 @@ package com.example.spring5recipes.controllers;
 
 import com.example.spring5recipes.commands.IngredientCommand;
 import com.example.spring5recipes.commands.RecipeCommand;
+import com.example.spring5recipes.exceptions.NotFoundException;
 import com.example.spring5recipes.services.IngredientService;
 import com.example.spring5recipes.services.RecipeService;
 import com.example.spring5recipes.services.UnitOfMeasureService;
@@ -65,6 +66,25 @@ public class IngredientControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("recipe/ingredients/show"))
                 .andExpect(model().attributeExists("ingredient"));
+    }
+
+    @Test
+    public void testIngredientNotFound() throws Exception {
+        IngredientCommand command = new IngredientCommand();
+        command.setId(1L);
+
+        when(ingredientService.findByRecipeIdAndIngredientId(anyLong(),anyLong())).thenThrow(NotFoundException.class);
+
+        mockMvc.perform((get("/recipe/1/ingredients/2/show")))
+                .andExpect(status().isNotFound())
+                .andExpect(view().name("404error"));
+    }
+
+    @Test
+    public void testBadRequestIngredient() throws Exception {
+        mockMvc.perform(get("/recipe/1/ingredients/dfg/show"))
+                .andExpect(status().isBadRequest())
+                .andExpect(view().name("400error"));
     }
 
     @Test

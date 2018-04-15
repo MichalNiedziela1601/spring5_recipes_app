@@ -77,6 +77,18 @@ public class RecipeControllerTest {
     }
 
     @Test
+    public void testBadRequestGivenNumberFormatException() throws Exception {
+        Recipe recipe = new Recipe();
+        recipe.setId(1L);
+
+        when(recipeService.findById(any())).thenThrow(NumberFormatException.class);
+
+        mvc.perform(get("/recipe/show/asd"))
+                .andExpect(status().isBadRequest())
+                .andExpect(view().name("400error"));
+    }
+
+    @Test
     public void givenIdRecipeWhenUrlRecipeShowThenReturnRecipe() throws Exception {
         mvc.perform(get("/recipe/show/1"))
                 .andExpect(status().isOk())
@@ -125,8 +137,6 @@ public class RecipeControllerTest {
                 .andExpect(view().name("redirect:/"));
 
         verify(recipeService, times(1)).deleteById(anyLong());
-
-
     }
 
 }
