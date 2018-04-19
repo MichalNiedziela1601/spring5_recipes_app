@@ -5,7 +5,7 @@ import com.example.spring5recipes.services.RecipeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ public class IndexController {
         this.recipeService = recipeService;
     }
 
-    @RequestMapping({"","/","/index"})
+    @GetMapping({"","/","/index"})
     public ResponseEntity<List<Recipe>> getIndexPage()
     {
         Set<Recipe> recipes = recipeService.getRecipes();
