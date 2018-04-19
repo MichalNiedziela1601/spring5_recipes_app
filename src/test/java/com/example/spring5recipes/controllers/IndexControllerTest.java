@@ -1,53 +1,62 @@
 package com.example.spring5recipes.controllers;
 
 import com.example.spring5recipes.domain.Recipe;
-import com.example.spring5recipes.repositories.UnitOfMeasureRepository;
 import com.example.spring5recipes.services.RecipeService;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.DefaultMockMvcBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.ui.Model;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@RunWith(SpringRunner.class)
+@WebAppConfiguration
+@SpringBootTest
 public class IndexControllerTest {
 
     IndexController indexController;
 
+    @Autowired
+    private WebApplicationContext wac;
+
+    private MockMvc mockMvc;
+
     @Mock
     RecipeService recipeService;
 
-    @Mock
-    Model model;
-
-    @Mock
-    UnitOfMeasureRepository unitOfMeasureRepository;
-
     @Before
     public void setUp() throws Exception {
-        MockitoAnnotations.initMocks(this);
+        DefaultMockMvcBuilder builder = MockMvcBuilders.webAppContextSetup(this.wac);
+        this.mockMvc = builder.build();
+//        MockitoAnnotations.initMocks(this);
         indexController = new IndexController(recipeService);
     }
 
     @Test
     public void testMOckMcv() throws Exception {
-        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(indexController).build();
-
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("index"));
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+        .andExpect(jsonPath("$", Matchers.hasSize(2)))
+        .andExpect(jsonPath("$[0].id", Matchers.is(2)));
     }
 
     @Test
@@ -64,17 +73,16 @@ public class IndexControllerTest {
 
         when(recipeService.getRecipes()).thenReturn(recipes);
 
-        ArgumentCaptor<Set<Recipe>> argumentCaptor = ArgumentCaptor.forClass(Set.class);
-
         //when
-        String result = indexController.getIndexPage(model);
+        ResponseEntity<List<Recipe>> indexPage = indexController.getIndexPage();
 
         //then
-        assertEquals("index", result);
+        assertEquals(2, indexPage.getBody().size());
+
 
         verify(recipeService, times(1)).getRecipes();
-        verify(model, times(1)).addAttribute(eq("recipes"), argumentCaptor.capture());
-        Set<Recipe> setInController = argumentCaptor.getValue();
-        assertEquals(2, setInController.size());
+//        verify(model, times(1)).addAttribute(eq("recipes"), argumentCaptor.capture());
+//        Set<Recipe> setInController = argumentCaptor.getValue();
+//        assertEquals(2, setInController.size());
     }
 }

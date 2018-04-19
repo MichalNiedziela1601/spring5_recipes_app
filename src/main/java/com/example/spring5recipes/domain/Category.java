@@ -1,5 +1,6 @@
 package com.example.spring5recipes.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -16,6 +17,7 @@ public class Category {
     private Long id;
 
     @ManyToMany(mappedBy = "categories")
+    @JsonIgnore
     private Set<Recipe> recipes;
 
     private String description;

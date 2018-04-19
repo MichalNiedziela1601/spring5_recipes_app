@@ -1,5 +1,6 @@
 package com.example.spring5recipes.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -14,6 +15,7 @@ public class Notes {
     private Long id;
 
     @OneToOne
+    @JsonIgnore
     private Recipe recipe;
 
     @Lob

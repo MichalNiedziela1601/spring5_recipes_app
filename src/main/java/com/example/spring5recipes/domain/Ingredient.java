@@ -1,5 +1,6 @@
 package com.example.spring5recipes.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -16,6 +17,7 @@ public class Ingredient {
     private Long id;
 
     @ManyToOne
+    @JsonIgnore
     private Recipe recipe;
 
     private String description;
@@ -23,6 +25,7 @@ public class Ingredient {
     private BigDecimal amount;
 
     @OneToOne(fetch = FetchType.EAGER)
+    @JsonIgnore
     private UnitOfMeasure uom;
 
     public Ingredient() {
