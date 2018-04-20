@@ -31,7 +31,8 @@ export default class RecipeList extends Component {
             </tr>
         ) : [];
         return (
-             <div className="recipe-list container" id="recipe-list"><table>
+             <div className="recipe-list container" id="recipe-list">
+                 <table className="table">
                  <thead>
                  <tr>
                      <th>Recipe</th>
