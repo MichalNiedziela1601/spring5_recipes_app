@@ -25,7 +25,6 @@ public class Ingredient {
     private BigDecimal amount;
 
     @OneToOne(fetch = FetchType.EAGER)
-    @JsonIgnore
     private UnitOfMeasure uom;
 
     public Ingredient() {
