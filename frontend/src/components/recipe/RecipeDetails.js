@@ -10,10 +10,14 @@ export default class RecipeDetails extends Component {
         }
     }
 
+    componentDidMount() {
+
+    }
+
     render() {
         return (
-            <div>
-                recipe details: {this.state.id}
+            <div className="container">
+
             </div>
         )
     }

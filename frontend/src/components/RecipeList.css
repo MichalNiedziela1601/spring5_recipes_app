@@ -1,0 +1,7 @@
+.recipe-list {
+  width: 100%; }
+  .recipe-list .recipe-title {
+    background-color: dodgerblue;
+    color: white;
+    height: auto;
+    padding: 5px 10px; }

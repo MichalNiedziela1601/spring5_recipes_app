@@ -16,7 +16,7 @@ export default class RecipeList extends Component {
 
     componentDidMount() {
        return axios.get("http://localhost:8080/api/").then((res) => {
-            return this.setState({recipes: res.data});
+            this.setState({recipes: res.data});
         })
             .catch(err => {
                 console.error('Error: ' + err)

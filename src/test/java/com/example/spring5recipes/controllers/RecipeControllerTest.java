@@ -18,6 +18,7 @@ import org.springframework.ui.Model;
 import java.util.HashSet;
 import java.util.Set;
 
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -92,9 +93,18 @@ public class RecipeControllerTest {
 
     @Test
     public void givenIdRecipeWhenUrlRecipeShowThenReturnRecipe() throws Exception {
+
+        Recipe command = new Recipe();
+        command.setId(1L);
+        command.setDescription("Taco");
+
+        when(recipeService.findById(anyLong())).thenReturn(command);
+
         mvc.perform(get("/recipe/show/1"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("recipe/show"));
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+        .andExpect(jsonPath("$.id", is(1)))
+        .andExpect(jsonPath("$.description", is("Taco")));
     }
 
     @Test
