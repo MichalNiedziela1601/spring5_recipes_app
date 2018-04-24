@@ -1,8 +1,11 @@
 import React, {Component} from 'react';
 import './RecipeList.css';
 import axios from 'axios';
+import {Link} from 'react-router-dom';
 
 export default class RecipeList extends Component {
+
+
 
     constructor(props) {
         super(props);
@@ -25,7 +28,7 @@ export default class RecipeList extends Component {
         const recipes = this.state.recipes ? this.state.recipes.map(recipe =>
             <tr key={recipe.id}>
                 <td>{recipe.description}</td>
-                <td>View</td>
+                <td><Link to={`/recipe/${recipe.id}/show`}>View</Link></td>
                 <td>Update</td>
                 <td>Delete</td>
             </tr>
@@ -44,7 +47,8 @@ export default class RecipeList extends Component {
                  <tbody>
                  {recipes}
                  </tbody>
-             </table></div>
+             </table>
+             </div>
         )
     }
 
