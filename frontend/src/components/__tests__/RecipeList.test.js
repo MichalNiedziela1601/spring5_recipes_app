@@ -1,23 +1,10 @@
 import React from 'react';
-import RecipeList from './RecipeList';
-import {mount, shallow} from 'enzyme';
-
-
-jest.mock('axios', () => {
-
-    const recipes = [
-        {id: 1, description: 'Taco'},
-        {id: 2, description: 'Guacamole'}
-    ];
-    return {
-        get: jest.fn(() => Promise.resolve(recipes))
-    }
-});
-
-const axios = require('axios');
-
+import RecipeList from '../RecipeList';
+import {mount} from 'enzyme';
+import axios from 'axios';
 
 describe('RecipeList', () => {
+
     it('render table', () => {
         const wrapper = mount(<RecipeList/>);
         const tableHead = <tr>
@@ -29,16 +16,17 @@ describe('RecipeList', () => {
         expect(wrapper.contains(tableHead)).toEqual(true);
     });
 
-    it('work with promise', (done) => {
-        const wrapper = shallow(<RecipeList/>);
+    it('work with promise', async (done) => {
+        const wrapper = mount(<RecipeList/>);
+        expect(wrapper.state('recipes')).toEqual([]);
 
         wrapper.instance().componentDidMount().then(() => {
             expect(axios.get).toHaveBeenCalled();
             expect(axios.get).toHaveBeenCalledWith("http://localhost:8080/api/");
-
-
+            expect(wrapper.state().recipes).toEqual([{id: 1}, {id: 2}]);
             done();
         });
 
     })
+
 });
