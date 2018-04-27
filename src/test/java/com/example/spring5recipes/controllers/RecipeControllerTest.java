@@ -7,7 +7,6 @@ import com.example.spring5recipes.services.CategoryService;
 import com.example.spring5recipes.services.RecipeService;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
@@ -15,11 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -49,23 +44,6 @@ public class RecipeControllerTest {
                 .build();
     }
 
-
-    @Test
-    public void whenPassIdThenReturnRecipe() throws Exception {
-
-        Set<Recipe> recipeSet = new HashSet<>();
-        Recipe recipe = new Recipe();
-        recipe.setId(1L);
-        recipeSet.add(recipe);
-
-        ArgumentCaptor<Recipe> argumentCaptor = ArgumentCaptor.forClass(Recipe.class);
-
-        String id = "1";
-        String result = controller.findById(id, model);
-
-        assertEquals("recipe/show", result);
-        verify(model, times(1)).addAttribute(eq("recipe"), argumentCaptor.capture());
-    }
 
     @Test
     public void testBadRecipeIdGIveStatusNOtFound() throws Exception {

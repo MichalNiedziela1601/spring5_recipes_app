@@ -1,5 +1,5 @@
 import React from 'react';
-import RecipeList from './RecipeList';
+import RecipeList from '../RecipeList';
 import {mount} from 'enzyme';
 import axios from 'axios';
 

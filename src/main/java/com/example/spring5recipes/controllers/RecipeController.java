@@ -8,6 +8,7 @@ import com.example.spring5recipes.services.CategoryService;
 import com.example.spring5recipes.services.RecipeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -30,10 +31,9 @@ public class RecipeController {
 
     @RequestMapping(value = "recipe/show/{id}")
     @ResponseBody
-    public String findById(@PathVariable String id, Model model) {
+    public ResponseEntity<Recipe> findById(@PathVariable String id) {
         Recipe recipe = recipeService.findById(new Long(id));
-        model.addAttribute("recipe", recipe);
-        return "recipe/show";
+        return new ResponseEntity<Recipe>(recipe, HttpStatus.OK);
     }
 
     @RequestMapping("recipe/new")

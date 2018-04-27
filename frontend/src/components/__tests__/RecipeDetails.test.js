@@ -1,19 +1,14 @@
 import React from 'react';
-import {mount, shallow} from 'enzyme';
+import {mount} from 'enzyme';
+import RecipeDetails from '../recipe/RecipeDetails';
 import axios from 'axios';
-import RecipeDetails from './RecipeDetails';
 
 describe('RecipeDetails', () => {
-
-    it('should have set id property', () => {
-        const wrapper = shallow(<RecipeDetails match={{params: {id: 1}}}/>);
-        expect(wrapper.containsMatchingElement(<h2>Id: 1</h2>)).toBeTruthy();
-
-    });
 
     it('componentDidMount should fetch recipe detail', async (done) => {
         const wrapper = mount(<RecipeDetails match={{params: {id: 1}}}/>);
         expect(wrapper.state('recipe')).toEqual({});
+        expect(wrapper.state('id')).toEqual(1);
 
         wrapper.instance().componentDidMount().then(() => {
             expect(axios.get).toHaveBeenCalled();
@@ -23,4 +18,4 @@ describe('RecipeDetails', () => {
             done();
         })
     })
-})
+});

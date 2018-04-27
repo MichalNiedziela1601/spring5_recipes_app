@@ -4,9 +4,8 @@ export default {
         switch(url) {
             case BASE_URL: {
                 return  Promise.resolve({ data: [{id: 1}, {id: 2}] });
-                break;
             }
-            case BASE_URL + '/recipe/1/show': {
+            case BASE_URL + 'recipe/show/1': {
                 return Promise.resolve({data: {id: 1, description: 'Taco'}});
             }
         }
