@@ -7,9 +7,14 @@ import com.example.spring5recipes.repositories.UnitOfMeasureRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -79,6 +84,8 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
         guacRecipe.getCategories().add(americanCategory);
         guacRecipe.getCategories().add(mexicanCategory);
 
+        saveImageToRecipe("static/guacamole.jpg", guacRecipe);
+
         recipes.add(guacRecipe);
 
         Recipe tacos = new Recipe();
@@ -96,6 +103,7 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
         tacos.addIngredients(new Ingredient("onion", new BigDecimal(2), eachUom));
 
         tacos.getCategories().add(mexicanCategory);
+        saveImageToRecipe("static/taco.jpg", tacos);
 
         recipes.add(tacos);
         return recipes;
@@ -117,6 +125,39 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
         }
 
         return categoryOptional.get();
+    }
+
+    private InputStream readFileFromResource(String name) {
+        Resource resource = new ClassPathResource(name);
+        try {
+            return resource.getInputStream();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private Byte[] convertInputStream(InputStream stream) {
+
+        try {
+            byte[] target = new byte[stream.available()];
+            stream.read(target);
+            Byte[] fileBytes = new Byte[target.length];
+            int i = 0;
+            for (byte t : target) {
+                fileBytes[i++] = t;
+            }
+            return fileBytes;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private void saveImageToRecipe(String name, Recipe recipe) {
+        InputStream stream = readFileFromResource(name);
+        Byte[] image = convertInputStream(stream);
+        recipe.setImage(image);
     }
 
 
