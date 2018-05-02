@@ -1,0 +1,23 @@
+.recipe-list-item .img-wrapper {
+  background: #cfac4f;
+  padding: 5px; }
+  .recipe-list-item .img-wrapper img {
+    max-width: 100%;
+    height: auto;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    border-radius: 15px; }
+
+.recipe-list-item .item-header {
+  text-align: center;
+  font-family: 'Source Sans Pro', sans-serif; }
+  .recipe-list-item .item-header a {
+    color: inherit; }
+
+.recipe-list-item .item-bar {
+  background: #f9d34b;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px; }
+  .recipe-list-item .item-bar i {
+    padding-right: 5px; }

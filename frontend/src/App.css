@@ -1,10 +1,19 @@
 .App {
-  text-align: center; }
+  background-image: url("./wood-menu.jpg");
+  -webkit-background-size: auto 100%;
+  background-size: auto 100%;
+  background-repeat: no-repeat;
+  background-position: top left;
+  -webkit-background-size: cover;
+  background-size: cover;
+  height: 100%; }
   .App .App-header {
-    background-color: #222;
+    text-align: center;
+    background-color: #f9d34b;
     height: 150px;
     padding: 20px;
-    color: white; }
+    color: #000000;
+    border-bottom: 2px solid #656565; }
     .App .App-header .App-logo {
       animation: App-logo-spin infinite 20s linear;
       height: 80px; }
@@ -12,6 +21,8 @@
     font-size: 1.5em; }
   .App .App-intro {
     font-size: large; }
+  .App .container {
+    background: #ffffff; }
 
 @keyframes App-logo-spin {
   from {

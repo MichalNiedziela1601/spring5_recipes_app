@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import logo from './logo.svg';
 import './App.css';
 import RecipeDetails from "./components/recipe/RecipeDetails";
-import RecipeList from "./components/RecipeList";
+import RecipeList from "./components/recipeList/RecipeList";
 import {BrowserRouter as Router, Route} from "react-router-dom";
 
 class App extends Component {
