@@ -12,7 +12,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -70,13 +69,14 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
         Recipe guacRecipe = new Recipe();
         guacRecipe.setDescription("Perfect guacamole");
         guacRecipe.setPrepTime(10);
-        guacRecipe.setCookTime(0);
+        guacRecipe.setCookTime(10);
+        guacRecipe.setServings(2);
         guacRecipe.setDifficulty(Difficulty.EASY);
-        guacRecipe.setDirections("Guacamole directions");
+        guacRecipe.setDirections("Guacamole directions. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
 
 
         Notes guacNotes = new Notes();
-        guacNotes.setRecipeNotes("Guac Notes");
+        guacNotes.setRecipeNotes("Guac Notes. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
 
         guacNotes.setRecipe(guacRecipe);
         guacRecipe.setNotes(guacNotes);
@@ -91,11 +91,12 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
         Recipe tacos = new Recipe();
         tacos.setDescription("Taco");
         tacos.setPrepTime(20);
-        tacos.setCookTime(0);
+        tacos.setCookTime(90);
         tacos.setDifficulty(Difficulty.EASY);
-        tacos.setDirections("Prepare chicken breast on the fry pan. Dice paprika, onions and lettuce");
+        tacos.setServings(4);
+        tacos.setDirections("Prepare chicken breast on the fry pan. Dice paprika, onions and lettuce. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
         Notes tacosNotes = new Notes();
-        tacosNotes.setRecipeNotes("Tacos is very easy mecixan dishes");
+        tacosNotes.setRecipeNotes("Tacos is very easy mecixan dishes. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
 
         tacos.setNotes(tacosNotes);
         tacos.addIngredients(new Ingredient( "chicken breast", new BigDecimal(2), pintUom));

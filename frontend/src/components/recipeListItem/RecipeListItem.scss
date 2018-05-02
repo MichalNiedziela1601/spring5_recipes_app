@@ -1,0 +1,35 @@
+.recipe-list-item {
+
+  .img-wrapper {
+
+    background: #cfac4f;
+    padding: 5px;
+    img {
+      max-width: 100%;
+      height: auto;
+      -webkit-border-radius: 15px;
+      -moz-border-radius: 15px;
+      border-radius: 15px;
+    }
+  }
+
+
+  .item-header {
+    text-align: center;
+    font-family: 'Source Sans Pro', sans-serif;
+    a {
+      color: inherit;
+    }
+  }
+
+  .item-bar {
+    background: #f9d34b;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+
+    i {
+      padding-right: 5px;
+    }
+  }
+}
