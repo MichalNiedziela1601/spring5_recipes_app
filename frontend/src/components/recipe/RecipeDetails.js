@@ -57,7 +57,7 @@ export default class RecipeDetails extends Component {
                     </div>
 
                     <div className="col-md-6">
-                        <img src={img_url} className="img-responsive"/>
+                        <img src={img_url} className="full-width img-responsive"/>
                     </div>
                 </div>
 
