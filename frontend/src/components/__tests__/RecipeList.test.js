@@ -1,18 +1,21 @@
 import React from 'react';
 import RecipeList from '../recipeList/RecipeList';
-import {mount} from 'enzyme';
+import RecipeListItem from '../recipeListItem/RecipeListItem';
+import {mount, shallow} from 'enzyme';
 import axios from 'axios';
 
 describe('RecipeList', () => {
 
     it('render table', () => {
-        const wrapper = mount(<RecipeList/>);
+        const wrapper = shallow(<RecipeList/>);
         const tableHead = <tr>
             <th>Recipe</th>
             <th>Update</th>
             <th>Delete</th>
         </tr>;
         expect(wrapper.contains(tableHead)).toEqual(true);
+        wrapper.setState({ recipes: [{id: 1}, {id: 2}]});
+        expect(wrapper.find(RecipeListItem)).toHaveLength(2);
     });
 
     it('work with promise', async (done) => {
