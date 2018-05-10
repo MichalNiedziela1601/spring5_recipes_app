@@ -9,5 +9,13 @@ export default {
                 return Promise.resolve({data: {id: 1, description: 'Taco'}});
             }
         }
+    }),
+    post: jest.fn((url, obj) => {
+        switch(url) {
+            case `${BASE_URL}recipe/new` : {
+                return Promise.resolve({data: {id: 2}});
+            }
+        }
+
     })
 };

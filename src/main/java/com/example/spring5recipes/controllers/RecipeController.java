@@ -36,29 +36,20 @@ public class RecipeController {
         return new ResponseEntity<Recipe>(recipe, HttpStatus.OK);
     }
 
-    @RequestMapping("recipe/new")
-    public String addNewRecipe(Model model) {
-        model.addAttribute("recipe", new RecipeCommand());
-        model.addAttribute("categories", this.categoryService.getCategories());
-
-        return "recipe/form";
-    }
 
     @PostMapping
-    @RequestMapping("recipe")
-    public String saveOrUpdate(@Valid @ModelAttribute("recipe") RecipeCommand command, BindingResult bindingResult) {
-
+    @RequestMapping("recipe/new")
+    public ResponseEntity<RecipeCommand> saveOrUpdate(@Valid @RequestBody RecipeCommand command, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             bindingResult.getAllErrors().forEach(objectError -> {
                 log.debug(objectError.toString());
             });
-
-            return "recipe/form";
+            return new ResponseEntity<RecipeCommand>(command, HttpStatus.BAD_REQUEST);
         }
 
         RecipeCommand savedRecipe = recipeService.saveRecipeCommand(command);
 
-        return "redirect:/recipe/show/" + savedRecipe.getId();
+        return new ResponseEntity<RecipeCommand>(savedRecipe, HttpStatus.OK);
     }
 
     @RequestMapping("recipe/update/{id}")

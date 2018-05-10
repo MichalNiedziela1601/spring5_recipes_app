@@ -81,17 +81,17 @@ public class RecipeControllerTest {
         mvc.perform(get("/recipe/show/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-        .andExpect(jsonPath("$.id", is(1)))
-        .andExpect(jsonPath("$.description", is("Taco")));
+                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.description", is("Taco")));
     }
 
-    @Test
-    public void testGetNewRecipeView() throws Exception {
-        mvc.perform(get("/recipe/new"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("recipe/form"))
-                .andExpect(model().attributeExists("recipe"));
-    }
+//    @Test
+//    public void testGetNewRecipeView() throws Exception {
+//        mvc.perform(get("/recipe/new"))
+//                .andExpect(status().isOk())
+//                .andExpect(view().name("recipe/form"))
+//                .andExpect(model().attributeExists("recipe"));
+//    }
 
     @Test
     public void givenRecipeCommandWhenPassToSaveThenReturnNewRecipe() throws Exception {
@@ -101,12 +101,14 @@ public class RecipeControllerTest {
 
         when(recipeService.saveRecipeCommand(any())).thenReturn(testRecipeCommand);
 
-        mvc.perform(post("/recipe").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+        mvc.perform(post("/recipe/new").contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("id", "")
                 .param("description", "description")
         )
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/recipe/show/2"));
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.id", is(2)))
+                .andExpect(jsonPath("$.description", is("description")));
     }
 
     @Test
