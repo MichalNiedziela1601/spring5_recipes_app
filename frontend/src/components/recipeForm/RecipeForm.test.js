@@ -23,52 +23,37 @@ describe('ReciepForm', () => {
         expect(mockSubmit).toBeCalled();
     });
 
-    describe('simulate change', async () => {
-        it('input', () => {
+    describe('simulate change',  () => {
+        it('input', async () => {
             const tree = shallow(<RecipeForm/>);
-            expect(tree.state().description).toBe('');
-            tree.find('form').find('input').simulate('change', { target: { name: 'description', value: 'desc'}});
+            expect(tree.state().recipe.description).toBe('');
+            tree.find('form').find('#description').simulate('change', { target: { name: 'description', value: 'desc'}});
             tree.update();
-            expect(tree.state().description).toEqual('desc');
+            expect(tree.state().recipe.description).toEqual('desc');
+
+
         })
     });
 
     describe('when form invalid', () => {
-        it('should show validation error for description', () => {
+        it('should show validation error for description', async () => {
             const tree = shallow(<RecipeForm/>);
-            tree.find('form').find('input').simulate('change', { target: { name: 'description', value: 'desc'}});
-            expect(tree.find(FormErrors).dive().find('p')).toHaveLength(1);
+            tree.find('form').find('#description').simulate('change', { target: { name: 'description', value: 'de'}});
             expect(tree.find(FormErrors).dive().find('p').text()).toEqual('description is invalid');
         });
 
-        it('should show validation error for difficulty', () => {
+        it('should show validation error for preparation time', async () => {
             const tree = shallow(<RecipeForm/>);
-            tree.find('form').find('select').simulate('change', { target: { name: 'difficulty', value: 'EASY'}});
-            expect(tree.find(FormErrors).dive().find('p').text()).toEqual('difficulty is invalid');
+            tree.find('form').find('#prepTime').simulate('change', { target: { name: 'prepTime', value: 0}});
+            expect(tree.find(FormErrors).dive().find('p').text()).toEqual('prepTime is invalid');
         });
 
-        it('should show validation error for ingredients', () => {
+        it('should show validation error for cooking time', async () => {
             const tree = shallow(<RecipeForm/>);
-            tree.find('form').find('select').simulate('change', { target: { name: 'difficulty', value: 'EASY'}});
-            expect(tree.find(FormErrors).dive().find('p').text()).toEqual('difficulty is invalid');
+            tree.find('form').find('#cookTime').simulate('change', { target: { name: 'cookTime', value: 0}});
+            expect(tree.find(FormErrors).dive().find('p').text()).toEqual('cookTime is invalid');
         })
 
 
     })
-
-    // describe('when form submit valid',  () => {
-    //     it('should redirect to RecipeDetails', async () => {
-    //         const wrapper = mount(<RecipeForm/>);
-    //         const mockSubmit = jest.fn();
-    //         const redirectComponent = mount(
-    //             <MemoryRouter initialEntries={['/recipe/new']}>
-    //                 <Route component={App} />
-    //             </MemoryRouter>
-    //         );
-    //         wrapper.instance().handleSubmit = mockSubmit;
-    //         await wrapper.instance().handleSubmit();
-    //         wrapper.update();
-    //         expect(redirectComponent.find(App).props().location.pathname).toBe("/recipe/2/show");
-    //     })
-    // })
 });

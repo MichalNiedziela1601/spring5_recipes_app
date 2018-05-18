@@ -1,6 +1,7 @@
 package com.example.spring5recipes.services;
 
 
+import com.example.spring5recipes.commands.IngredientCommand;
 import com.example.spring5recipes.commands.RecipeCommand;
 import com.example.spring5recipes.converters.RecipeCommandToRecipe;
 import com.example.spring5recipes.converters.RecipeToRecipeCommand;
@@ -22,11 +23,13 @@ public class RecipeServiceImpl implements RecipeService {
     private final RecipeRepository recipeRepository;
     private final RecipeCommandToRecipe recipeCommandToRecipe;
     private final RecipeToRecipeCommand recipeToRecipeCommand;
+    private final IngredientService ingredientService;
 
-    public RecipeServiceImpl(RecipeRepository recipeRepository, RecipeCommandToRecipe recipeCommandToRecipe, RecipeToRecipeCommand recipeToRecipeCommand) {
+    public RecipeServiceImpl(RecipeRepository recipeRepository, RecipeCommandToRecipe recipeCommandToRecipe, RecipeToRecipeCommand recipeToRecipeCommand, IngredientService ingredientService) {
         this.recipeRepository = recipeRepository;
         this.recipeCommandToRecipe = recipeCommandToRecipe;
         this.recipeToRecipeCommand = recipeToRecipeCommand;
+        this.ingredientService = ingredientService;
     }
 
     @Override
@@ -52,6 +55,12 @@ public class RecipeServiceImpl implements RecipeService {
 
         Recipe convertedRecipe = recipeCommandToRecipe.convert(command);
         Recipe savedRecipe = recipeRepository.save(convertedRecipe);
+
+        for(IngredientCommand ingCmd : command.getIngredients()) {
+            ingCmd.setRecipeId(savedRecipe.getId());
+            ingredientService.saveIngredientCommand(ingCmd);
+        }
+
         return recipeToRecipeCommand.convert(savedRecipe);
     }
 

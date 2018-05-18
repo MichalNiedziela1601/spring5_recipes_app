@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -39,17 +38,11 @@ public class RecipeController {
 
     @PostMapping
     @RequestMapping("recipe/new")
-    public ResponseEntity<RecipeCommand> saveOrUpdate(@Valid @RequestBody RecipeCommand command, BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) {
-            bindingResult.getAllErrors().forEach(objectError -> {
-                log.debug(objectError.toString());
-            });
-            return new ResponseEntity<RecipeCommand>(command, HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<RecipeCommand> saveOrUpdate(@Valid @RequestBody RecipeCommand command) {
 
         RecipeCommand savedRecipe = recipeService.saveRecipeCommand(command);
 
-        return new ResponseEntity<RecipeCommand>(savedRecipe, HttpStatus.OK);
+        return new ResponseEntity<RecipeCommand>(savedRecipe, HttpStatus.CREATED);
     }
 
     @RequestMapping("recipe/update/{id}")

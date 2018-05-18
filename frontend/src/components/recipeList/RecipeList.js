@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import './RecipeList.css';
 import axios from 'axios';
 import RecipeListItem from '../recipeListItem/RecipeListItem';
+import {Link} from "react-router-dom";
 
 export default class RecipeList extends Component {
 
@@ -34,6 +35,7 @@ export default class RecipeList extends Component {
         ) : [];
         return (
              <div className="recipe-list container" id="recipe-list">
+                 <Link to={'/recipe/new'}><button className='btn btn-primary'>Add new</button></Link>
                  <table className="table">
                  <thead>
                  <tr>
