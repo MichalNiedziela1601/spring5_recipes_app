@@ -44,7 +44,6 @@ describe('RecipeDetails', () => {
             ]
         };
         wrapper.setState({recipe: recipe});
-        console.log(wrapper.debug());
         expect(wrapper.find('h2').text()).toEqual(recipe.description);
         expect(wrapper.find('h6').at(0).text()).toEqual("Categories:");
         expect(wrapper.find('h6').at(1).text()).toEqual("Difficulty: " + recipe.difficulty);

@@ -1,18 +1,26 @@
 package com.example.spring5recipes.controllers;
 
+import com.example.spring5recipes.commands.IngredientCommand;
 import com.example.spring5recipes.commands.RecipeCommand;
+import com.example.spring5recipes.commands.UnitOfMeasureCommand;
 import com.example.spring5recipes.domain.Recipe;
 import com.example.spring5recipes.exceptions.NotFoundException;
 import com.example.spring5recipes.services.CategoryService;
 import com.example.spring5recipes.services.RecipeService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.ui.Model;
+
+import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
@@ -24,9 +32,6 @@ public class RecipeControllerTest {
     private RecipeController controller;
 
     @Mock
-    Model model;
-
-    @Mock
     RecipeService recipeService;
 
     @Mock
@@ -34,10 +39,17 @@ public class RecipeControllerTest {
 
     MockMvc mvc;
 
+    JacksonTester<RecipeCommand> jsonTester;
+
+    @Autowired
+    ObjectMapper objectMapper;
+
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         controller = new RecipeController(recipeService, categoryService);
+        objectMapper = new ObjectMapper();
+        JacksonTester.initFields(this, objectMapper);
 
         mvc = MockMvcBuilders.standaloneSetup(controller)
                 .setControllerAdvice(new ControllerAdviceHandler())
@@ -66,7 +78,7 @@ public class RecipeControllerTest {
 
         mvc.perform(get("/recipe/show/asd"))
                 .andExpect(status().isBadRequest())
-                .andExpect(view().name("400error"));
+                .andExpect(jsonPath("$", is("For input string: \"asd\"")));
     }
 
     @Test
@@ -81,17 +93,10 @@ public class RecipeControllerTest {
         mvc.perform(get("/recipe/show/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-        .andExpect(jsonPath("$.id", is(1)))
-        .andExpect(jsonPath("$.description", is("Taco")));
+                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.description", is("Taco")));
     }
 
-    @Test
-    public void testGetNewRecipeView() throws Exception {
-        mvc.perform(get("/recipe/new"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("recipe/form"))
-                .andExpect(model().attributeExists("recipe"));
-    }
 
     @Test
     public void givenRecipeCommandWhenPassToSaveThenReturnNewRecipe() throws Exception {
@@ -99,28 +104,56 @@ public class RecipeControllerTest {
         testRecipeCommand.setId(2L);
         testRecipeCommand.setDescription("description");
 
+        final String recipeCommandJson = jsonTester.write(testRecipeCommand).getJson();
+
         when(recipeService.saveRecipeCommand(any())).thenReturn(testRecipeCommand);
 
-        mvc.perform(post("/recipe").contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("id", "")
-                .param("description", "description")
+        mvc.perform(post("/recipe/new").contentType(MediaType.APPLICATION_JSON)
+                .content(recipeCommandJson)
         )
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/recipe/show/2"));
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.id", is(2)))
+                .andExpect(jsonPath("$.description", is("description")));
     }
 
     @Test
     public void testPostNewRecipeFormValidationFail() throws Exception {
+
         RecipeCommand recipeCommand = new RecipeCommand();
         recipeCommand.setId(1L);
 
+        Set<IngredientCommand> ingredientCommandSet = new HashSet<>();
+        IngredientCommand ing1 = new IngredientCommand();
+        ing1.setRecipeId(recipeCommand.getId());
+        ing1.setId(1L);
+        UnitOfMeasureCommand unitOfMeasureCommand = new UnitOfMeasureCommand();
+        unitOfMeasureCommand.setId(1L);
+        unitOfMeasureCommand.setDescription("Pint");
+        ing1.setUom(unitOfMeasureCommand);
+        ing1.setDescription("Beer");
+        ing1.setAmount(new BigDecimal(3));
+        ingredientCommandSet.add(ing1);
+
+        recipeCommand.setServings(3);
+        recipeCommand.setCookTime(3);
+        recipeCommand.setPrepTime(50);
+        recipeCommand.setUrl("http://example.com");
+        recipeCommand.setIngredients(ingredientCommandSet);
+
+
+        String jsonRecipe = jsonTester.write(recipeCommand).getJson();
+
         when(recipeService.saveRecipeCommand(any())).thenReturn(recipeCommand);
 
-        mvc.perform(post("/recipe").contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("id", "")
+        mvc.perform(post("/recipe/new").contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(jsonRecipe)
         )
-                .andExpect(status().isOk())
-                .andExpect(view().name("recipe/form"));
+                .andExpect(status().isBadRequest())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+        .andExpect(jsonPath("$.errors[0].name", is("description")))
+        .andExpect(jsonPath("$.errors[0].errorDescription", is("must not be blank")))
+        ;
 
     }
 

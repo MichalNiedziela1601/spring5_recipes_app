@@ -3,6 +3,7 @@ import RecipeList from '../recipeList/RecipeList';
 import RecipeListItem from '../recipeListItem/RecipeListItem';
 import {mount, shallow} from 'enzyme';
 import axios from 'axios';
+import ReactRouterEnzymeContext from 'react-router-enzyme-context';
 
 describe('RecipeList', () => {
 
@@ -19,7 +20,8 @@ describe('RecipeList', () => {
     });
 
     it('work with promise', async (done) => {
-        const wrapper = mount(<RecipeList/>);
+        const options = new ReactRouterEnzymeContext();
+        const wrapper = mount(<RecipeList/>, options.get());
         expect(wrapper.state('recipes')).toEqual([]);
 
         wrapper.instance().componentDidMount().then(() => {

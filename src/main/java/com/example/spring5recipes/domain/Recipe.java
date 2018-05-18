@@ -2,6 +2,7 @@ package com.example.spring5recipes.domain;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -11,6 +12,7 @@ import java.util.Set;
 @Data
 @Entity
 @EqualsAndHashCode(exclude = {"ingredients"})
+@ToString
 public class Recipe {
 
     @Id

@@ -6,6 +6,7 @@ import com.example.spring5recipes.exceptions.NotFoundException;
 import com.example.spring5recipes.services.IngredientService;
 import com.example.spring5recipes.services.RecipeService;
 import com.example.spring5recipes.services.UnitOfMeasureService;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -86,7 +87,7 @@ public class IngredientControllerTest {
     public void testBadRequestIngredient() throws Exception {
         mockMvc.perform(get("/recipe/1/ingredients/dfg/show"))
                 .andExpect(status().isBadRequest())
-                .andExpect(view().name("400error"));
+                .andExpect(jsonPath("$", Matchers.is("For input string: \"dfg\"")));
     }
 
     @Test
