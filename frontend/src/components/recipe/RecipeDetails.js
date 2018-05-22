@@ -1,5 +1,8 @@
 import React, {Component} from 'react';
 import axios from 'axios';
+import './recipeDetails.css';
+import TextUtills from "../../utils/TextUtils";
+
 
 export default class RecipeDetails extends Component {
 
@@ -21,36 +24,46 @@ export default class RecipeDetails extends Component {
     render() {
         const img_url = "http://localhost:8080/api/recipe/" + this.state.id + "/recipeimage";
 
-        const categories = this.state.recipe.categories ? this.state.recipe.categories.map(category =>
-            <li key={category.id}>{category.description}</li>
+        const categories = this.state.recipe.categories ? this.state.recipe.categories.map((category, ind, arr) =>
+            arr.length - 1 === ind ? category.description  : category.description + ', '
         ) : [];
         const ingredients = this.state.recipe.ingredients ? this.state.recipe.ingredients.map(ingredient =>
             <li key={ingredient.id}>{ingredient.amount} {ingredient.uom.description} {ingredient.description}</li>
         ) : [];
+
+        const cookTimeArr = TextUtills.convertTime(this.state.recipe.cookTime);
+        const prepTimeArr = TextUtills.convertTime(this.state.recipe.prepTime);
+        const prepTime  = TextUtills.timeRender(prepTimeArr);
+        const cookTime  = TextUtills.timeRender(cookTimeArr);
+
         return (
-            <div className="container">
+            <div className="container recipe-details">
                 <div className="row">
-                    <div className="col-md-6">
+                    <div className="col-md-12 text-center recipe-title">
                         <h2 className="page-header text-uppercase">{this.state.recipe.description}</h2>
+                    </div>
+                    <div className="col-md-6">
+
 
                         <div className="text-left">
-                            <h6><b>Categories:</b></h6>
-                            <ul>{categories}</ul>
-                            <h6><b>Difficulty: </b>{this.state.recipe.difficulty}</h6>
-                            <h6><b>Servings:</b> {this.state.recipe.servings}</h6>
-                            <h6><b>Cook Time:</b> {this.state.recipe.cookTime}</h6>
-                            <h6><b>Preparation Time:</b> {this.state.recipe.prepTime}</h6>
-                            <h6><b>Source:</b> {this.state.recipe.source}</h6>
-                            <h6><b>URL:</b> {this.state.recipe.url}</h6>
+                            <div className="info text-uppercase">
+                                <div><span className="font-weight-bold">category: </span> <span className="margin-right-1">{categories}</span>
+                                <span className="font-weight-bold">difficulty:</span> <span className="margin-right-1">{this.state.recipe.difficulty}</span>
+                                <span className="font-weight-bold">Servings:</span> <span className="margin-right-1">{this.state.recipe.servings}</span></div>
+                                <div><span className="font-weight-bold">Preparation Time:</span> <span className="margin-right-1">{prepTime}</span>
+                                <span className="font-weight-bold">cooking Time:</span> <span className="margin-right-1">{prepTime}</span></div>
+                            </div>
+                            <div>
+                                {this.state.recipe.notes ? this.state.recipe.notes.recipeNotes : ''}
+                            </div>
 
-                            <h6><b>Ingredients</b></h6>
-                            <ul>{ingredients}</ul>
+                            <div className="recipe-ingredients">
+                                <div className="title"><h4 className="text-uppercase">Ingredients</h4></div>
+                                <ul>{ingredients}</ul>
+                            </div>
 
-                            <h6><b>Directions</b></h6>
-                            <p>{this.state.recipe.directions}</p>
 
-                            <h6><b>Notes</b></h6>
-                            <p>{this.state.recipe.notes ? this.state.recipe.notes.recipeNotes : ''}</p>
+
 
                         </div>
 
@@ -58,6 +71,11 @@ export default class RecipeDetails extends Component {
 
                     <div className="col-md-6">
                         <img src={img_url} className="full-width img-responsive"/>
+                    </div>
+
+                    <div className="col-md-12">
+                        <h6><b>Directions</b></h6>
+                        <p>{this.state.recipe.directions}</p>
                     </div>
                 </div>
 

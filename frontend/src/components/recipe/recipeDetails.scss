@@ -1,0 +1,46 @@
+@import "../../varaibles";
+.recipe-details {
+  font-family: 'Source Sans Pro', sans-serif;
+
+
+  .margin-right-1 {
+    margin-right: 10px;
+  }
+
+  .info {
+    font-size: 13px;
+    padding: 3px 12px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    background: $main-color;
+    margin-bottom: 2rem;
+
+  }
+
+  .recipe-title h2 {
+    border-bottom: 3px double #8c8b8b;
+    padding-bottom: 5px;
+    margin-bottom: 35px;
+  }
+
+  .recipe-ingredients {
+    background: $secondary-main-color;
+    border: 1px solid #8c8b8b;
+
+    .title {
+      background: $main-color;
+      border-bottom: 1px solid #8c8b8b;
+
+      h4 {
+        margin-left: 20px;
+        font-weight: 300;
+      }
+    }
+
+    li {
+      border-bottom: 1px dotted #8c8b8b;
+      margin-right: 10%;
+    }
+  }
+}
