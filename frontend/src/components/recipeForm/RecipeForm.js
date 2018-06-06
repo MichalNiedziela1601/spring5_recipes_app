@@ -7,6 +7,7 @@ import {config} from '../config';
 
 export default class RecipeForm extends Component {
 
+
     constructor(props) {
         super(props);
         this.state = {
@@ -42,22 +43,21 @@ export default class RecipeForm extends Component {
     }
 
     componentDidMount() {
-        if (this.props.update) {
-            return axios.get(`${config.URL}recipe/update/${this.props.id}`)
-                .then(res => this.setState({recipe: res.data}))
-                .then(() => axios.get(`${config.URL}uoms`).then(res =>
-                    this.setState({uoms: res.data})
-                ).then(() => {
-                    return axios.get(`${config.URL}category`);
-                }).then(res => this.setState({categories: res.data})))
-        } else {
             return axios.get(`${config.URL}uoms`).then(res =>
                 this.setState({uoms: res.data})
             ).then(() => {
                 return axios.get(`${config.URL}category`);
             }).then(res => this.setState({categories: res.data}))
-        }
 
+
+    }
+
+
+
+    UNSAFE_componentWillReceiveProps(nextProps) {
+        if(this.props.recipe.id !== nextProps.recipe.id) {
+            this.setState({recipe: nextProps.recipe});
+        }
     }
 
     validateField(fieldName, value) {
