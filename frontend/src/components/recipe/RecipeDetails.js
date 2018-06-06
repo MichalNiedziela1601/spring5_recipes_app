@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import axios from 'axios';
 import './recipeDetails.css';
 import TextUtills from "../../utils/TextUtils";
-
+import {config} from "../config";
 
 export default class RecipeDetails extends Component {
 
@@ -15,14 +15,14 @@ export default class RecipeDetails extends Component {
     }
 
     componentDidMount() {
-        return axios.get('http://localhost:8080/api/recipe/show/' + this.props.match.params.id).then((res) => {
+        return axios.get(`${config.URL}recipe/show/${this.props.match.params.id}`).then((res) => {
             this.setState({recipe: res.data});
         })
             .catch(err => console.log('Error: ', err));
     }
 
     render() {
-        const img_url = "http://localhost:8080/api/recipe/" + this.state.id + "/recipeimage";
+        const img_url = config.URL + "recipe/" + this.state.id + "/recipeimage";
 
         const categories = this.state.recipe.categories ? this.state.recipe.categories.map((category, ind, arr) =>
             arr.length - 1 === ind ? category.description  : category.description + ', '
@@ -51,9 +51,9 @@ export default class RecipeDetails extends Component {
                                 <span className="font-weight-bold">difficulty:</span> <span className="margin-right-1">{this.state.recipe.difficulty}</span>
                                 <span className="font-weight-bold">Servings:</span> <span className="margin-right-1">{this.state.recipe.servings}</span></div>
                                 <div><span className="font-weight-bold">Preparation Time:</span> <span className="margin-right-1">{prepTime}</span>
-                                <span className="font-weight-bold">cooking Time:</span> <span className="margin-right-1">{prepTime}</span></div>
+                                <span className="font-weight-bold">cooking Time:</span> <span className="margin-right-1">{cookTime}</span></div>
                             </div>
-                            <div>
+                            <div id="recipe-notes">
                                 {this.state.recipe.notes ? this.state.recipe.notes.recipeNotes : ''}
                             </div>
 
