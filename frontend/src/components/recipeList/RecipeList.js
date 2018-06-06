@@ -3,6 +3,7 @@ import './RecipeList.css';
 import axios from 'axios';
 import RecipeListItem from '../recipeListItem/RecipeListItem';
 import {Link} from "react-router-dom";
+import {config} from '../config';
 
 export default class RecipeList extends Component {
 
@@ -16,7 +17,7 @@ export default class RecipeList extends Component {
     }
 
     componentDidMount() {
-       return axios.get("http://localhost:8080/api/").then((res) => {
+       return axios.get(config.URL).then((res) => {
             this.setState({recipes: res.data});
         })
             .catch(err => {

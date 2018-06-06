@@ -3,6 +3,7 @@ import axios from 'axios';
 import {Redirect} from 'react-router-dom';
 import {FormErrors} from './FormErrors';
 import './RecipeForm.css';
+import {config} from '../config';
 
 export default class RecipeForm extends Component {
 
@@ -42,18 +43,18 @@ export default class RecipeForm extends Component {
 
     componentDidMount() {
         if (this.props.update) {
-            return axios.get("http://localhost:8080/api/recipe/update/" + this.props.id)
+            return axios.get(`${config.URL}recipe/update/${this.props.id}`)
                 .then(res => this.setState({recipe: res.data}))
-                .then(() => axios.get("http://localhost:8080/api/uoms").then(res =>
+                .then(() => axios.get(`${config.URL}uoms`).then(res =>
                     this.setState({uoms: res.data})
                 ).then(() => {
-                    return axios.get('http://localhost:8080/api/category');
+                    return axios.get(`${config.URL}category`);
                 }).then(res => this.setState({categories: res.data})))
         } else {
-            return axios.get("http://localhost:8080/api/uoms").then(res =>
+            return axios.get(`${config.URL}uoms`).then(res =>
                 this.setState({uoms: res.data})
             ).then(() => {
-                return axios.get('http://localhost:8080/api/category');
+                return axios.get(`${config.URL}category`);
             }).then(res => this.setState({categories: res.data}))
         }
 
