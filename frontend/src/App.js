@@ -3,9 +3,9 @@ import logo from './logo.svg';
 import './App.css';
 import RecipeDetails from "./components/recipe/RecipeDetails";
 import RecipeList from "./components/recipeList/RecipeList";
-import RecipeForm from './components/recipeForm/RecipeForm';
 import {BrowserRouter as Router, Route} from "react-router-dom";
-import RecipeUpdate from "./components/RecipeUpdate";
+import RecipeUpdate from "./components/recipeUpdate/RecipeUpdate";
+import NewRecipe from "./components/newRecipe/NewRecipe";
 
 class App extends Component {
 
@@ -22,7 +22,7 @@ class App extends Component {
 
                     <Route exact path='/' component={RecipeList}/>
                     <Route path='/recipe/:id/show' component={RecipeDetails}/>
-                    <Route path='/recipe/new' component={RecipeForm}/>
+                    <Route path='/recipe/new' component={NewRecipe}/>
                     <Route path='/recipe/update/:id' component={RecipeUpdate} />
                 </div>
 
