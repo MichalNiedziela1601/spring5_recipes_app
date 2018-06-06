@@ -29,7 +29,7 @@ export default class RecipeList extends Component {
         const recipes = this.state.recipes ? this.state.recipes.map(recipe =>
             <tr key={recipe.id}>
                 <td><RecipeListItem recipe={recipe}/></td>
-                <td>Update</td>
+                <td><Link to={`recipe/update/${recipe.id}`}>Update</Link></td>
                 <td>Delete</td>
             </tr>
         ) : [];

@@ -5,6 +5,7 @@ import RecipeDetails from "./components/recipe/RecipeDetails";
 import RecipeList from "./components/recipeList/RecipeList";
 import RecipeForm from './components/recipeForm/RecipeForm';
 import {BrowserRouter as Router, Route} from "react-router-dom";
+import RecipeUpdate from "./components/RecipeUpdate";
 
 class App extends Component {
 
@@ -22,6 +23,7 @@ class App extends Component {
                     <Route exact path='/' component={RecipeList}/>
                     <Route path='/recipe/:id/show' component={RecipeDetails}/>
                     <Route path='/recipe/new' component={RecipeForm}/>
+                    <Route path='/recipe/update/:id' component={RecipeUpdate} />
                 </div>
 
             </Router>

@@ -28,12 +28,12 @@ export default class RecipeForm extends Component {
             },
             submitted: false,
             fireRedirect: false,
-            formErrors: {description: ''},
-            descriptionValid: false,
-            formValid: false,
-            cookTimeValid: false,
-            prepTimeValid: false,
-            directionsValid: false,
+            formErrors: {},
+            descriptionValid: !!props.update,
+            formValid: !!props.update,
+            cookTimeValid: !!props.update,
+            prepTimeValid: !!props.update,
+            directionsValid: !!props.update,
             uoms: [],
             categories: [],
             recipeCategories: []
@@ -41,11 +41,22 @@ export default class RecipeForm extends Component {
     }
 
     componentDidMount() {
-        return axios.get("http://localhost:8080/api/uoms").then(res =>
-            this.setState({uoms: res.data})
-        ).then(() => {
-            return axios.get('http://localhost:8080/api/category');
-        }).then(res => this.setState({categories: res.data}))
+        if (this.props.update) {
+            return axios.get("http://localhost:8080/api/recipe/update/" + this.props.id)
+                .then(res => this.setState({recipe: res.data}))
+                .then(() => axios.get("http://localhost:8080/api/uoms").then(res =>
+                    this.setState({uoms: res.data})
+                ).then(() => {
+                    return axios.get('http://localhost:8080/api/category');
+                }).then(res => this.setState({categories: res.data})))
+        } else {
+            return axios.get("http://localhost:8080/api/uoms").then(res =>
+                this.setState({uoms: res.data})
+            ).then(() => {
+                return axios.get('http://localhost:8080/api/category');
+            }).then(res => this.setState({categories: res.data}))
+        }
+
     }
 
     validateField(fieldName, value) {
@@ -99,7 +110,9 @@ export default class RecipeForm extends Component {
         axios.post("http://localhost:8080/api/recipe/new", this.state.recipe).then(res => {
             this.setState({fireRedirect: true, id: res.data.id});
 
-        }, err => { console.log('err',err.errors);})
+        }, err => {
+            console.log('err', err.errors);
+        })
             .catch(err => console.log(err));
     };
 
@@ -115,7 +128,11 @@ export default class RecipeForm extends Component {
 
     handleAddIngredient = () => {
         const recipe = {...this.state.recipe};
-        recipe.ingredients = this.state.recipe.ingredients.concat([{amount: 0, uom: {description: this.state.uoms[0].description, id: this.state.uoms[0].id}, description: ''}]);
+        recipe.ingredients = this.state.recipe.ingredients.concat([{
+            amount: 0,
+            uom: {description: this.state.uoms[0].description, id: this.state.uoms[0].id},
+            description: ''
+        }]);
         this.setState({recipe});
     };
 
@@ -123,8 +140,9 @@ export default class RecipeForm extends Component {
         const name = env.target.name;
         const value = env.target.value;
         const newIngredients = this.state.recipe.ingredients.map((ingredient, sid) => {
-            if(idx !== sid) return ingredient;
-            return {...ingredient, [name] : value};
+            if (idx !== sid) return ingredient;
+            const recipeId = this.props.update ? this.props.id : null;
+            return {...ingredient, [name]: value, recipeId : recipeId};
         });
         const recipe = {...this.state.recipe};
         recipe.ingredients = newIngredients;
@@ -134,8 +152,9 @@ export default class RecipeForm extends Component {
     handleChangeIngredientUom = (idx) => (env) => {
         const value = env.target.value;
         const newUom = this.state.recipe.ingredients.map((ingredient, sid) => {
-            if(idx !== sid) return ingredient;
-            return {...ingredient, uom: this.state.uoms[value]};
+            if (idx !== sid) return ingredient;
+            const recipeId = this.props.update ? this.props.id : null;
+            return {...ingredient, uom: this.state.uoms.find(obj => obj.id == value), recipeId};
         });
         const recipe = {...this.state.recipe};
         recipe.ingredients = newUom;
@@ -153,12 +172,12 @@ export default class RecipeForm extends Component {
     handleCategoryChange = (env) => {
         const recipe = {...this.state.recipe};
         let categories = recipe.categories;
-        const value =env.target.value;
+        const value = env.target.value;
         const checkedCategory = this.state.categories[value];
         this.setState({recipe});
         const index = categories.findIndex(obj => obj.id === checkedCategory.id);
-        if(index > -1) {
-            categories.splice(index,1);
+        if (index > -1) {
+            categories.splice(index, 1);
         } else {
             categories.push(checkedCategory);
         }
@@ -167,18 +186,17 @@ export default class RecipeForm extends Component {
     };
 
 
-
     render() {
         const {id, fireRedirect} = this.state;
-        const selectUoms = this.state.uoms.map((uom, index) =>(
-            <option value={index} key={uom.id} >{uom.description}</option>
+        const selectUoms = this.state.uoms.map((uom, index) => (
+                <option value={uom.id} key={uom.id}>{uom.description}</option>
             )
         );
         const categoryCheckboxes = this.state.categories.map((category, idx) => (
             <div className="form-check" key={category.id}>
                 <label className="form-check-label">
-                    <input type="checkbox" className="form-check-input" value={idx}
-                    onChange={this.handleCategoryChange}/>{category.description}
+                    <input type="checkbox" className="form-check-input" value={idx} checked={this.state.recipe.categories.find(obj => obj.id === category.id)}
+                           onChange={this.handleCategoryChange}/>{category.description}
                 </label>
             </div>
         ));
@@ -190,7 +208,8 @@ export default class RecipeForm extends Component {
                 <form onSubmit={this.handleSubmit}>
                     <div className="form-group">
                         <label>Description</label>
-                        <input type='text' name='description' id="description" onChange={this.updateState} className="form-control"/>
+                        <input type='text' name='description' id="description" onChange={this.updateState} value={this.state.recipe.description}
+                               className="form-control"/>
                     </div>
 
                     <div className="form-row">
@@ -200,7 +219,9 @@ export default class RecipeForm extends Component {
                                    name="prepTime"
                                    onChange={this.updateState}
                                    id="prepTime"
-                                   className="form-control"/>
+                                   className="form-control"
+                                    value={this.state.recipe.prepTime}
+                            />
                         </div>
                         <div className="form-group col-md-4">
                             <label>Cooking Time</label>
@@ -208,7 +229,8 @@ export default class RecipeForm extends Component {
                                    name="cookTime"
                                    id="cookTime"
                                    onChange={this.updateState}
-                                   className="form-control"/>
+                                   className="form-control"
+                                   value={this.state.recipe.cookTime}/>
                         </div>
                         <div className="form-group col-md-4">
                             <label>Servings</label>
@@ -216,7 +238,8 @@ export default class RecipeForm extends Component {
                                    name="servings"
                                    id="servings"
                                    onChange={this.updateState}
-                                   className="form-control"/>
+                                   className="form-control"
+                                   value={this.state.recipe.servings}/>
                         </div>
                     </div>
                     <div className={'form-row'}>
@@ -226,7 +249,8 @@ export default class RecipeForm extends Component {
                                    name="source"
                                    id="source"
                                    onChange={this.updateState}
-                                   className="form-control"/>
+                                   className="form-control"
+                                   value={this.state.recipe.source}/>
                         </div>
                         <div className="form-group col-md-6">
                             <label>URL</label>
@@ -234,7 +258,8 @@ export default class RecipeForm extends Component {
                                    name="url"
                                    id="url"
                                    onChange={this.updateState}
-                                   className="form-control"/>
+                                   className="form-control"
+                                   value={this.state.recipe.url}/>
                         </div>
                     </div>
                     <div className="form-group">
@@ -246,7 +271,9 @@ export default class RecipeForm extends Component {
                             <div className="form-check form-check-inline" key={id}>
                                 <input className="form-check-input" type="radio" name="difficulty"
                                        id={'difficulty' + id}
-                                       value={difficulty} onChange={this.updateState}/>
+                                       value={difficulty} onChange={this.updateState}
+                                        checked={this.state.recipe.difficulty === difficulty}
+                                />
                                 <label className="form-check-label">{difficulty}</label>
                             </div>
                         )}
@@ -254,37 +281,48 @@ export default class RecipeForm extends Component {
                     </div>
 
 
-                    {this.state.recipe.ingredients.map((ingredient, idx) => (
+                    {this.state.recipe.ingredients.length > 0 ? this.state.recipe.ingredients.map((ingredient, idx) => (
                         <div className="form-row" key={idx}>
                             <div className="form-group col-md-3">
                                 <input type="number" name="amount" placeholder="Amount" value={ingredient.amount}
-                                       onChange={this.handleChangeIngredient(idx)} />
+                                       onChange={this.handleChangeIngredient(idx)}/>
                             </div>
                             <div className="form-group col-md-3">
-                                <select name="uom.description" onChange={this.handleChangeIngredientUom(idx)}>
+                                {this.props.update ? <select name="uom.description" onChange={this.handleChangeIngredientUom(idx)} value={ingredient.uom ?
+                                    ingredient.uom.id : 0}>
                                     {selectUoms}
-                                </select>
+                                </select> :
+                                    <select name="uom.description" onChange={this.handleChangeIngredientUom(idx)}>
+                                        {selectUoms}
+                                    </select>
+                                }
+
 
                             </div>
                             <div className="form-group col-md-3">
-                                <input type="text" name="description" placeholder="Ingredient description" value={ingredient.description}
+                                <input type="text" name="description" placeholder="Ingredient description"
+                                       value={ingredient.description}
                                        onChange={this.handleChangeIngredient(idx)}/>
                             </div>
                         </div>
-                    ))}
+                    )) : []}
 
                     <div className="form-group col-md-3">
-                        <button type="button" onClick={this.handleAddIngredient} className={'btn btn-primary'}>Add ingredient</button>
+                        <button type="button" onClick={this.handleAddIngredient} className={'btn btn-primary'}>Add
+                            ingredient
+                        </button>
                     </div>
 
                     <div className={'form-group'}>
                         <label className='label'>Directions</label>
-                        <textarea value={this.state.recipe.directions} className='form-control' name="directions" onChange={this.updateState}></textarea>
+                        <textarea value={this.state.recipe.directions} className='form-control' name="directions"
+                                  onChange={this.updateState}></textarea>
                     </div>
 
                     <div className={'form-group'}>
                         <label>Recipe notes</label>
-                        <textarea value={this.state.recipe.notes.recipeNotes} className='form-control' name="recipeNotes" onChange={this.updateStateNotes}></textarea>
+                        <textarea value={this.state.recipe.notes.recipeNotes} className='form-control'
+                                  name="recipeNotes" onChange={this.updateStateNotes}></textarea>
                     </div>
 
                     <button type='submit' className='btn btn-success' disabled={!this.state.formValid}>Submit</button>
