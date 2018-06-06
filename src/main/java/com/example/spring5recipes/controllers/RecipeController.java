@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -39,20 +38,17 @@ public class RecipeController {
     @PostMapping
     @RequestMapping("recipe/new")
     public ResponseEntity<RecipeCommand> saveOrUpdate(@Valid @RequestBody RecipeCommand command) {
-
+        log.info("command: " + command.getIngredients());
         RecipeCommand savedRecipe = recipeService.saveRecipeCommand(command);
 
         return new ResponseEntity<RecipeCommand>(savedRecipe, HttpStatus.CREATED);
     }
 
     @RequestMapping("recipe/update/{id}")
-    public String updateRecipe(@PathVariable String id, Model model) {
+    public ResponseEntity<RecipeCommand> updateRecipe(@PathVariable String id) {
         RecipeCommand command = recipeService.findCommandById(Long.valueOf(id));
 
-        model.addAttribute("recipe", command);
-        model.addAttribute("categories", categoryService.getCategories());
-
-        return "recipe/form";
+        return new ResponseEntity<RecipeCommand>(command, HttpStatus.OK);
     }
 
     @RequestMapping("recipe/delete/{id}")

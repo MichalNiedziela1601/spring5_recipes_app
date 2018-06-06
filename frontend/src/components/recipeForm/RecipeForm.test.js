@@ -55,5 +55,9 @@ describe('ReciepForm', () => {
         })
 
 
+    });
+
+    describe('when update props true', () => {
+        const tree = shallow(<RecipeForm update={true} id={1}/>)
     })
 });

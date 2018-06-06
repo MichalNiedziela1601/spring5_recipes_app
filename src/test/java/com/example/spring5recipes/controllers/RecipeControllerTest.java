@@ -158,13 +158,19 @@ public class RecipeControllerTest {
     }
 
     @Test
-    public void testGetUpdateView() throws Exception {
-        RecipeCommand recipeCommand = new RecipeCommand();
-        recipeCommand.setId(2L);
+    public void givenIdRecipeWhenUrlRecipeUpdateThenReturnRecipeCommand() throws Exception {
 
-        mvc.perform(get("/recipe/update/2"))
+        RecipeCommand recipeCommand = new RecipeCommand();
+        recipeCommand.setId(1L);
+        recipeCommand.setDescription("Taco");
+
+        when(recipeService.findCommandById(anyLong())).thenReturn(recipeCommand);
+
+        mvc.perform(get("/recipe/update/1"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("recipe/form"));
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.description", is("Taco")));
     }
 
     @Test
