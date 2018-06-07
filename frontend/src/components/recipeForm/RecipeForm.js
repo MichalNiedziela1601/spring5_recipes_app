@@ -52,13 +52,13 @@ export default class RecipeForm extends Component {
 
     }
 
-
-
-    UNSAFE_componentWillReceiveProps(nextProps) {
-        if(this.props.recipe.id !== nextProps.recipe.id) {
-            this.setState({recipe: nextProps.recipe});
+    static getDerivedStateFromProps(props, state) {
+        if(undefined !== props.recipe.description) {
+            state.recipe = props.recipe;
         }
     }
+
+
 
     validateField(fieldName, value) {
         let fieldValidationErrors = this.state.formErrors;
