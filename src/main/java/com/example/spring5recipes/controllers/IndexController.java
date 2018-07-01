@@ -22,7 +22,7 @@ public class IndexController {
         this.recipeService = recipeService;
     }
 
-    @GetMapping({"","/","/index"})
+    @GetMapping({"/","/index"})
     public ResponseEntity<List<Recipe>> getIndexPage()
     {
         Set<Recipe> recipes = recipeService.getRecipes();

@@ -13,7 +13,7 @@ export default class RecipeUpdate extends Component {
     }
 
     componentWillMount() {
-        return axios.get(`${config.URL}recipe/update/${this.props.match.params.id}`)
+        return axios.get(`${config.URL}/recipe/update/${this.props.match.params.id}`)
             .then(res => this.setState({recipe: res.data}))
     }
 

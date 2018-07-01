@@ -36,28 +36,33 @@ export default class RecipeForm extends Component {
             cookTimeValid: !!props.update,
             prepTimeValid: !!props.update,
             directionsValid: !!props.update,
+            servingsValid: !!props.update,
             uoms: [],
             categories: [],
-            recipeCategories: []
+            recipeCategories: [],
+            networkError: false
         }
     }
 
     componentDidMount() {
-            return axios.get(`${config.URL}uoms`).then(res =>
-                this.setState({uoms: res.data})
-            ).then(() => {
-                return axios.get(`${config.URL}category`);
-            }).then(res => this.setState({categories: res.data}))
+        return axios.get(`${config.URL}/uoms`).then(res =>
+            this.setState({uoms: res.data})
+        ).then(() => {
+            return axios.get(`${config.URL}/category`);
+        }).then(res => this.setState({categories: res.data}))
+            .catch(error => {
+                console.log(error);
+            })
 
 
     }
 
     static getDerivedStateFromProps(props, state) {
-        if(undefined !== props.recipe.description) {
+        if (undefined !== props.recipe.description) {
             state.recipe = props.recipe;
         }
+        return null;
     }
-
 
 
     validateField(fieldName, value) {
@@ -66,6 +71,7 @@ export default class RecipeForm extends Component {
         let cookTimeValid = this.state.cookTimeValid;
         let prepTimeValid = this.state.prepTimeValid;
         let directionValid = this.state.directionsValid;
+        let servingsValid = this.state.servingsValid;
 
         switch (fieldName) {
             case 'description':
@@ -85,6 +91,10 @@ export default class RecipeForm extends Component {
             case 'directions':
                 directionValid = value.length > 5;
                 fieldValidationErrors.directions = directionValid ? '' : 'is invalid';
+                break;
+            case 'servings':
+                servingsValid = value > 0 && value < 999;
+                fieldValidationErrors.servings = servingsValid ? '' : 'is invalid';
                 break;
 
             default:
@@ -111,10 +121,13 @@ export default class RecipeForm extends Component {
         axios.post("http://localhost:8080/api/recipe/new", this.state.recipe).then(res => {
             this.setState({fireRedirect: true, id: res.data.id});
 
-        }, err => {
-            console.log('err', err.errors);
         })
-            .catch(err => console.log(err));
+            .catch(err => {
+                console.error(err.response.data);
+                if (400 == err.response.code) {
+                    this.setState({networkError: true})
+                }
+            });
     };
 
     updateState = (event) => {
@@ -143,7 +156,7 @@ export default class RecipeForm extends Component {
         const newIngredients = this.state.recipe.ingredients.map((ingredient, sid) => {
             if (idx !== sid) return ingredient;
             const recipeId = this.props.update ? this.props.id : null;
-            return {...ingredient, [name]: value, recipeId : recipeId};
+            return {...ingredient, [name]: value, recipeId: recipeId};
         });
         const recipe = {...this.state.recipe};
         recipe.ingredients = newIngredients;
@@ -196,7 +209,8 @@ export default class RecipeForm extends Component {
         const categoryCheckboxes = this.state.categories.map((category, idx) => (
             <div className="form-check" key={category.id}>
                 <label className="form-check-label">
-                    <input type="checkbox" className="form-check-input" value={idx} checked={this.state.recipe.categories.find(obj => obj.id === category.id)}
+                    <input type="checkbox" className="form-check-input" value={idx}
+                           checked={this.state.recipe.categories.find(obj => obj.id === category.id)}
                            onChange={this.handleCategoryChange}/>{category.description}
                 </label>
             </div>
@@ -209,7 +223,8 @@ export default class RecipeForm extends Component {
                 <form onSubmit={this.handleSubmit}>
                     <div className="form-group">
                         <label>Description</label>
-                        <input type='text' name='description' id="description" onChange={this.updateState} value={this.state.recipe.description}
+                        <input type='text' name='description' id="description" onChange={this.updateState}
+                               value={this.state.recipe.description}
                                className="form-control"/>
                     </div>
 
@@ -221,7 +236,7 @@ export default class RecipeForm extends Component {
                                    onChange={this.updateState}
                                    id="prepTime"
                                    className="form-control"
-                                    value={this.state.recipe.prepTime}
+                                   value={this.state.recipe.prepTime}
                             />
                         </div>
                         <div className="form-group col-md-4">
@@ -251,7 +266,7 @@ export default class RecipeForm extends Component {
                                    id="source"
                                    onChange={this.updateState}
                                    className="form-control"
-                                   value={this.state.recipe.source}/>
+                                   value={this.state.recipe.source ? this.state.recipe.source : ''}/>
                         </div>
                         <div className="form-group col-md-6">
                             <label>URL</label>
@@ -260,7 +275,7 @@ export default class RecipeForm extends Component {
                                    id="url"
                                    onChange={this.updateState}
                                    className="form-control"
-                                   value={this.state.recipe.url}/>
+                                   value={this.state.recipe.url ? this.state.recipe.url : ''}/>
                         </div>
                     </div>
                     <div className="form-group">
@@ -273,7 +288,7 @@ export default class RecipeForm extends Component {
                                 <input className="form-check-input" type="radio" name="difficulty"
                                        id={'difficulty' + id}
                                        value={difficulty} onChange={this.updateState}
-                                        checked={this.state.recipe.difficulty === difficulty}
+                                       checked={this.state.recipe.difficulty === difficulty}
                                 />
                                 <label className="form-check-label">{difficulty}</label>
                             </div>
@@ -289,10 +304,12 @@ export default class RecipeForm extends Component {
                                        onChange={this.handleChangeIngredient(idx)}/>
                             </div>
                             <div className="form-group col-md-3">
-                                {this.props.update ? <select name="uom.description" onChange={this.handleChangeIngredientUom(idx)} value={ingredient.uom ?
-                                    ingredient.uom.id : 0}>
-                                    {selectUoms}
-                                </select> :
+                                {this.props.update ?
+                                    <select name="uom.description" onChange={this.handleChangeIngredientUom(idx)}
+                                            value={ingredient.uom ?
+                                                ingredient.uom.id : 0}>
+                                        {selectUoms}
+                                    </select> :
                                     <select name="uom.description" onChange={this.handleChangeIngredientUom(idx)}>
                                         {selectUoms}
                                     </select>
