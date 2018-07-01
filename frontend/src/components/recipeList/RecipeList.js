@@ -17,7 +17,7 @@ export default class RecipeList extends Component {
     }
 
     componentDidMount() {
-       return axios.get(config.URL).then((res) => {
+       return axios.get(config.URL+ '/').then((res) => {
             this.setState({recipes: res.data});
         })
             .catch(err => {

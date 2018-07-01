@@ -1,6 +1,7 @@
 .App {
   //text-align: center;
   background-image: url('./wood-menu.jpg');
+  background-attachment: fixed;
   -webkit-background-size: auto 100%;
   background-size: auto 100%;
   background-repeat: no-repeat;
@@ -20,6 +21,10 @@
     .App-logo {
       animation: App-logo-spin infinite 20s linear;
       height: 80px;
+    }
+
+    div {
+      background-color: #f9d34b;
     }
   }
 

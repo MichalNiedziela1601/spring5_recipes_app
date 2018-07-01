@@ -10,3 +10,6 @@ INSERT INTO unit_of_measure (description) VALUES ('Ounce');
 INSERT INTO unit_of_measure (description) VALUES ('Each');
 INSERT INTO unit_of_measure (description) VALUES ('Pint');
 INSERT INTO unit_of_measure (description) VALUES ('Dash');
+INSERT INTO authority (name) VALUES ('ROLE_USER'),('ROLE_ADMIN'), ('ROLE_MANAGER');
+INSERT INTO recipe_user (user_id, username, password) VALUES (1,'user','$2a$04$dNYpwqFOBZzXAq10PT1kBeK5c1NAn9WjXOJeviYx2zhnGekekRYQK');
+INSERT INTO user_authority (user_id, authority_name) VALUES (1, 'ROLE_USER');

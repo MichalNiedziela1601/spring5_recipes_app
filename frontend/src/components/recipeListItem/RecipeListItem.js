@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import './RecipeListItem.css';
 import {Link} from 'react-router-dom';
+import {config} from "../config";
 
 export default class RecipeListItem extends Component {
 
@@ -27,7 +28,7 @@ export default class RecipeListItem extends Component {
 
 
     render() {
-        const img_url = "http://localhost:8080/api/recipe/" + this.props.recipe.id + "/recipeimage";
+        const img_url = config.URL + "/recipe/" + this.props.recipe.id + "/recipeimage";
         const [hours, minutes] = this.convertTime(this.props.recipe.cookTime);
         let cookingTme;
 

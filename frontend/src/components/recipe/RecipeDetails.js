@@ -15,14 +15,14 @@ export default class RecipeDetails extends Component {
     }
 
     componentDidMount() {
-        return axios.get(`${config.URL}recipe/show/${this.props.match.params.id}`).then((res) => {
+        return axios.get(`${config.URL}/recipe/show/${this.props.match.params.id}`).then((res) => {
             this.setState({recipe: res.data});
         })
             .catch(err => console.log('Error: ', err));
     }
 
     render() {
-        const img_url = config.URL + "recipe/" + this.state.id + "/recipeimage";
+        const img_url = config.URL + "/recipe/" + this.state.id + "/recipeimage";
 
         const categories = this.state.recipe.categories ? this.state.recipe.categories.map((category, ind, arr) =>
             arr.length - 1 === ind ? category.description  : category.description + ', '
@@ -61,9 +61,6 @@ export default class RecipeDetails extends Component {
                                 <div className="title"><h4 className="text-uppercase">Ingredients</h4></div>
                                 <ul>{ingredients}</ul>
                             </div>
-
-
-
 
                         </div>
 
